@@ -1,0 +1,29 @@
+{
+  "name": "cds-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Christian Dating Site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon index",
+    "sq": "sequelize-cli"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-toritsejufo:cerebrohivetech/cds-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "awilix": "^6.0.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^7.0.0-alpha.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "sequelize-cli": "^6.3.0"
+  }
+}

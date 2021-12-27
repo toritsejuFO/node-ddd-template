@@ -1,0 +1,9 @@
+require('dotenv').config()
+const path = require('path')
+
+module.exports = {
+  'migrations-path': path.resolve('src/infra/sequelize', 'migrations'),
+  'seeders-path': path.resolve('src/infra/sequelize', 'seeders'),
+  'models-path': path.resolve('src/infra/sequelize', 'models'),
+  url: process.env.DATABASE_URL
+}
