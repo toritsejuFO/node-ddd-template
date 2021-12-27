@@ -18,6 +18,11 @@ const {
   routeLogger
 } = require('./interfaces/http/middleware')
 
+// Events/Event Listeners
+const Listeners = require('./domain/events/listeners')
+const EVENTS = require('./domain/events/events')
+const EventEmitter = require('./infra/events/EventEmitter')
+
 const container = createContainer()
 
 container.register({
@@ -35,7 +40,12 @@ container.register({
   // Middlewares
   exceptionHandler: asFunction(exceptionHandler).singleton(),
   invalidRouteHandler: asFunction(invalidRouteHandler).singleton(),
-  routeLogger: asFunction(routeLogger).singleton()
+  routeLogger: asFunction(routeLogger).singleton(),
+
+  // Events/Event Listeners
+  listeners: asFunction(Listeners).singleton(),
+  EVENTS: asValue(EVENTS),
+  eventEmitter: asClass(EventEmitter).singleton()
 })
 
 module.exports = container
