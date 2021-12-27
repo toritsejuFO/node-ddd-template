@@ -5,9 +5,10 @@ const app = container.resolve('app')
 app
   .start()
   .then(() => {
-    app.logger.log(':::APP STARTED:::')
+    app.logger.info(':::APP STARTED:::')
   })
   .catch((error) => {
-    app.logger.log(error)
-    app.logger.log(':::APP FAILED TO START:::')
+    app.logger.error(error)
+    app.logger.error(':::APP FAILED TO START:::')
+    process.exit(1)
   })

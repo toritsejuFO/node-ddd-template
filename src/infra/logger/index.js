@@ -1,11 +1,7 @@
-class Logger {
-  static log(...args) {
-    console.log(...args)
-  }
+const Log4js = require('log4js')
 
-  static error(...args) {
-    console.error(...args)
-  }
+module.exports = () => {
+  const logger = Log4js.getLogger('APP')
+  logger.level = 'DEBUG'
+  return logger
 }
-
-module.exports = Logger

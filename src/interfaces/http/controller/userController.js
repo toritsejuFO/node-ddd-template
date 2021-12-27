@@ -18,7 +18,7 @@ class UserController {
         return res.status(200).json({ success: true, data: users })
       })
       .catch((error) => {
-        logger.log(error)
+        logger.error(error)
         next(error)
       })
   }
