@@ -1,7 +1,7 @@
 {
-  "name": "cds-backend",
+  "name": "node-ddd-template",
   "version": "1.0.0",
-  "description": "Backend API for Christian Dating Site",
+  "description": "Node template for building apps using DDD",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com-toritsejufo:cerebrohivetech/cds-backend.git"
+    "url": "git@github.com-toritsejufo:toritsejuFO/node-ddd-template.git"
   },
   "keywords": [],
   "author": "",
