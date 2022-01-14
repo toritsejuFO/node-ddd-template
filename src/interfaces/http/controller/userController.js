@@ -10,7 +10,7 @@ class UserController {
   }
 
   getAllUsers(req, res, next) {
-    const { userManagementService, logger } = container.cradle
+    const { userManagementService } = container.cradle
 
     return userManagementService
       .getAllUsers()
@@ -18,7 +18,6 @@ class UserController {
         return res.status(200).json({ success: true, data: users })
       })
       .catch((error) => {
-        logger.log(error)
         next(error)
       })
   }

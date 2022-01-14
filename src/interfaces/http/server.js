@@ -14,7 +14,7 @@ class Server {
   start() {
     const { port } = this.config.app
     this.server.listen(port, () => {
-      this.logger.log('Server is listening on port', port)
+      this.logger.info('Server is listening on port %s', port)
     })
   }
 }
