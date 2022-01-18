@@ -21,12 +21,12 @@ class CommonEventEmitter extends EventEmitter {
     }
   }
 
-  registerListener(event, listener) {
-    const listenerRegistered = this.listeners().find(
-      (l) => String(l.name) === String(listener.name)
+  registerSubscriber(event, subscriber) {
+    const subscriberRegistered = this.listeners().find(
+      (s) => String(s.name) === String(subscriber.name)
     )
-    if (!listenerRegistered) {
-      this.on(event, listener)
+    if (!subscriberRegistered) {
+      this.on(event, subscriber)
     }
   }
 }

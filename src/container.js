@@ -18,8 +18,8 @@ const {
   routeLogger
 } = require('./interfaces/http/middleware')
 
-// Events/Event Listeners
-const Listeners = require('./domain/events/listeners')
+// Events/Event Subscribers
+const Subscribers = require('./domain/events/subscribers')
 const EVENTS = require('./domain/events/events')
 const EventEmitter = require('./infra/events/EventEmitter')
 
@@ -42,8 +42,8 @@ container.register({
   invalidRouteHandler: asFunction(invalidRouteHandler).singleton(),
   routeLogger: asFunction(routeLogger).singleton(),
 
-  // Events/Event Listeners
-  listeners: asFunction(Listeners).singleton(),
+  // Events/Event Subscribers
+  subscribers: asFunction(Subscribers).singleton(),
   EVENTS: asValue(EVENTS),
   eventEmitter: asClass(EventEmitter).singleton()
 })

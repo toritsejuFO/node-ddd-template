@@ -5,11 +5,11 @@ const container = require('../../../container')
 class UserController {
   constructor() {
     const router = Router()
-    router.get('/users', this.getAllUsers)
+    router.get('/users', this.#getAllUsers)
     return router
   }
 
-  getAllUsers(req, res, next) {
+  #getAllUsers(req, res, next) {
     const { userManagementService } = container.cradle
 
     return userManagementService
