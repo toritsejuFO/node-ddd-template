@@ -1,6 +1,10 @@
 class BaseException extends Error {
   constructor(message) {
-    super(message)
+    if (typeof message === 'object') {
+      super(JSON.stringify(message))
+    } else {
+      super(message)
+    }
   }
 }
 

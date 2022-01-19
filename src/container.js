@@ -7,9 +7,11 @@ const Logger = require('./infra/logger')
 const Repository = require('./infra/repository')
 const Router = require('./interfaces/http/router')
 const Server = require('./interfaces/http/server')
+const Encryption = require('./infra/encryption')
+const JWT = require('./infra/jwt')
 
 // Management Classes
-const { UserManagementService } = require('./app/user')
+const { UserManagementService, AuthManagementService } = require('./app/user')
 
 // Middlewares
 const {
@@ -33,9 +35,12 @@ container.register({
   repository: asFunction(Repository).singleton(),
   router: asFunction(Router).singleton(),
   server: asClass(Server).singleton(),
+  encryptionService: asClass(Encryption).singleton(),
+  jwtService: asClass(JWT).singleton(),
 
   // Operation Services
   userManagementService: asClass(UserManagementService).singleton(),
+  authManagementService: asClass(AuthManagementService).singleton(),
 
   // Middlewares
   exceptionHandler: asFunction(exceptionHandler).singleton(),

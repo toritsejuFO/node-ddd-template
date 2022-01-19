@@ -1,4 +1,4 @@
-const DatabaseException = require('../../../shared/exceptions/DatabaseException')
+const { DatabaseException } = require('../../../shared/exceptions')
 
 class UserRepository {
   #User
@@ -14,6 +14,17 @@ class UserRepository {
     } catch (error) {
       this.logger.error(error)
       throw new DatabaseException('Error fetching users from DB')
+    }
+  }
+
+  async findOneBy(params) {
+    try {
+      return await this.#User.findOne({ where: params })
+    } catch (error) {
+      this.logger.error(error)
+      throw new DatabaseException(
+        `Error fetching users from DB with params - ${JSON.stringify(params)}`
+      )
     }
   }
 }
