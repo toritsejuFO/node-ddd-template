@@ -7,9 +7,12 @@ const Logger = require('./infra/logger')
 const Repository = require('./infra/repository')
 const Router = require('./interfaces/http/router')
 const Server = require('./interfaces/http/server')
+const Encryption = require('./infra/encryption')
+const MailProvider = require('./infra/mail/mailProvider')
+const JWT = require('./infra/jwt')
 
 // Management Classes
-const { UserManagementService } = require('./app/user')
+const { UserManagementService, AuthManagementService } = require('./app/user')
 
 // Middlewares
 const {
@@ -18,8 +21,8 @@ const {
   routeLogger
 } = require('./interfaces/http/middleware')
 
-// Events/Event Listeners
-const Listeners = require('./domain/events/listeners')
+// Events/Event Subscribers
+const Subscribers = require('./domain/events/subscribers')
 const EVENTS = require('./domain/events/events')
 const EventEmitter = require('./infra/events/EventEmitter')
 
@@ -33,19 +36,26 @@ container.register({
   repository: asFunction(Repository).singleton(),
   router: asFunction(Router).singleton(),
   server: asClass(Server).singleton(),
+  encryptionService: asClass(Encryption).singleton(),
+  jwtService: asClass(JWT).singleton(),
+  mailProvider: asClass(MailProvider).singleton(),
 
   // Operation Services
   userManagementService: asClass(UserManagementService).singleton(),
+  authManagementService: asClass(AuthManagementService).singleton(),
 
   // Middlewares
   exceptionHandler: asFunction(exceptionHandler).singleton(),
   invalidRouteHandler: asFunction(invalidRouteHandler).singleton(),
   routeLogger: asFunction(routeLogger).singleton(),
 
-  // Events/Event Listeners
-  listeners: asFunction(Listeners).singleton(),
+  // Events/Event Subscribers
+  subscribers: asFunction(Subscribers).singleton(),
   EVENTS: asValue(EVENTS),
   eventEmitter: asClass(EventEmitter).singleton()
+
+  // Domain Services
+
 })
 
 module.exports = container

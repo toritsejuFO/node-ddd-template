@@ -7,6 +7,7 @@ module.exports = ({ exceptionHandler, invalidRouteHandler, routeLogger }) => {
 
   router.use(routeLogger)
   router.use(controller('userController'))
+  router.use(controller('authController'))
   router.use(invalidRouteHandler)
   router.use(exceptionHandler)
 

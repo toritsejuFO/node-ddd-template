@@ -1,16 +1,15 @@
 class App {
-  constructor({ server, database, logger, eventEmitter, listeners, EVENTS }) {
+  constructor({ server, database, logger, eventEmitter, subscribers }) {
     this.server = server
     this.database = database
     this.logger = logger
     this.eventEmitter = eventEmitter
-    this.listeners = listeners
-    this.EVENTS = EVENTS
+    this.subscribers = subscribers
   }
 
   async start() {
-    this.listeners.map((l) =>
-      this.eventEmitter.registerListener(l.EVENT, l.handler.bind(l))
+    this.subscribers.map((s) =>
+      this.eventEmitter.registerSubscriber(s.EVENT, s.handler.bind(s))
     )
     this.database.authenticate
     this.server.start()
