@@ -8,6 +8,7 @@ const Repository = require('./infra/repository')
 const Router = require('./interfaces/http/router')
 const Server = require('./interfaces/http/server')
 const Encryption = require('./infra/encryption')
+const MailProvider = require('./infra/mail/mailProvider')
 const JWT = require('./infra/jwt')
 
 // Management Classes
@@ -37,6 +38,7 @@ container.register({
   server: asClass(Server).singleton(),
   encryptionService: asClass(Encryption).singleton(),
   jwtService: asClass(JWT).singleton(),
+  mailProvider: asClass(MailProvider).singleton(),
 
   // Operation Services
   userManagementService: asClass(UserManagementService).singleton(),
@@ -51,6 +53,9 @@ container.register({
   subscribers: asFunction(Subscribers).singleton(),
   EVENTS: asValue(EVENTS),
   eventEmitter: asClass(EventEmitter).singleton()
+
+  // Domain Services
+
 })
 
 module.exports = container

@@ -1,8 +1,11 @@
 const subscribers = [
   require('./FetchedAllUsersSubscriber'),
-  require('./AnotherFetchedAllUsersSubscriber')
+  require('./AnotherFetchedAllUsersSubscriber'),
+  require('./activateAccountProcessor')
 ]
 
-module.exports = ({ EVENTS, logger }) => {
-  return subscribers.map((Subscriber) => new Subscriber({ EVENTS, logger }))
+module.exports = ({ EVENTS, logger, mailProvider }) => {
+  return subscribers.map(
+    (Subscriber) => new Subscriber({ EVENTS, logger, mailProvider })
+  )
 }

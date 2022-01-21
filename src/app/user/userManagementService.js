@@ -43,6 +43,10 @@ class UserManagementService {
 
     user.password = this.#encryptionService.encrypt(user.password)
     const createdUser = await this.#userRepository.create(user)
+    this.#eventEmitter.emitEvent(
+      this.EVENTS.NEW_USER_CREATED,
+      createdUser.toJSON()
+    )
     return createdUser.toJSON()
   }
 }

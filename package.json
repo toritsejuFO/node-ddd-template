@@ -25,6 +25,7 @@
     "jsonwebtoken": "^8.5.1",
     "log4js": "^6.3.0",
     "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.2",
     "sequelize": "^7.0.0-alpha.2",
     "structure": "^2.0.1"
   },
