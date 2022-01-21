@@ -1,4 +1,5 @@
 const { DatabaseException } = require('../../../shared/exceptions')
+const UserMapper = require('./userMapper')
 
 class UserRepository {
   #User
@@ -10,7 +11,8 @@ class UserRepository {
 
   async findAll() {
     try {
-      return await this.#User.findAll()
+      const users = await this.#User.findAll()
+      return users.map(UserMapper.toEntity)
     } catch (error) {
       this.logger.error(error)
       throw new DatabaseException('Error fetching users from DB')
@@ -19,12 +21,30 @@ class UserRepository {
 
   async findOneBy(params) {
     try {
-      return await this.#User.findOne({ where: params })
+      const user = await this.#User.findOne({ where: params })
+      UserMapper.toEntity(user)
     } catch (error) {
       this.logger.error(error)
-      throw new DatabaseException(
-        `Error fetching users from DB with params - ${JSON.stringify(params)}`
-      )
+      throw new DatabaseException('Error fetching users from DB with params')
+    }
+  }
+
+  async existsBy(params) {
+    try {
+      return await this.#User.count(params)
+    } catch (error) {
+      this.logger.error(error)
+      throw new DatabaseException('Error performing count operation')
+    }
+  }
+
+  async create(user) {
+    try {
+      const dbUser = await this.#User.create(user.toJSON())
+      return UserMapper.toEntity(dbUser)
+    } catch (error) {
+      this.logger.error(error)
+      throw new DatabaseException('Failed to persist user to DB')
     }
   }
 }

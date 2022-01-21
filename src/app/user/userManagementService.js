@@ -1,3 +1,6 @@
+const User = require('../../domain/user/User')
+const { ValidationError } = require('../../shared/exceptions')
+
 class UserManagementService {
   #userRepository
   #eventEmitter
@@ -14,6 +17,25 @@ class UserManagementService {
       userCount: users.length
     })
     return users
+  }
+
+  async createANewUser(newUserParams) {
+    const user = new User(newUserParams)
+
+    const { valid, errors } = user.validate()
+    if (!valid) {
+      throw new ValidationError('Invalid user creation parameters', errors)
+    }
+
+    const existsByEmail = await this.#userRepository.existsBy({
+      email: user.email
+    })
+    if (existsByEmail) {
+      throw new ValidationError('User with email exists')
+    }
+
+    const createdUser = await this.#userRepository.create(user)
+    return createdUser.toJSON()
   }
 }
 

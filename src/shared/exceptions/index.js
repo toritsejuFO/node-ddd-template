@@ -2,21 +2,26 @@ const BaseException = require('./BaseException')
 
 class DatabaseException extends BaseException {}
 
-class LoginParametersNotProvided extends BaseException {
-  constructor(error) {
-    super('Email or password not provided')
-    this.error = error
+class ValidationError extends BaseException {
+  constructor(message, error) {
+    super(message)
+    if (error) {
+      this.error = error
+    }
   }
 }
 
-class InvalidLoginParameters extends BaseException {
-  constructor(message) {
-    super(message || 'Email or password is invalid')
-  }
+const isOfType = (error, type) => {
+  return error && error.constructor && error.constructor.name === type
+}
+
+const isOfAny = (error, typeArray) => {
+  return typeArray.some((type) => isOfType(error, type))
 }
 
 module.exports = {
   DatabaseException,
-  LoginParametersNotProvided,
-  InvalidLoginParameters
+  ValidationError,
+  isOfType,
+  isOfAny
 }

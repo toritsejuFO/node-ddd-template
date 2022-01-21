@@ -1,8 +1,5 @@
 const Login = require('../../domain/auth/Login')
-const {
-  LoginParametersNotProvided,
-  InvalidLoginParameters
-} = require('../../shared/exceptions')
+const { ValidationError } = require('../../shared/exceptions')
 
 class AuthManagementService {
   #userRepository
@@ -25,17 +22,17 @@ class AuthManagementService {
 
     let { valid, errors } = login.validate()
     if (!valid) {
-      throw new LoginParametersNotProvided(errors)
+      throw new ValidationError('Email or password not provided', errors)
     }
 
     const user = await this.#userRepository.findOneBy({ email: login.email })
     if (!user) {
-      throw new InvalidLoginParameters()
+      throw new ValidationError('Email or password is invalid')
     }
 
     valid = this.#encryptionService.compare(login.password, user.password)
     if (!valid) {
-      throw new InvalidLoginParameters()
+      throw new ValidationError('Email or password is invalid')
     }
 
     const payload = { email: user.email, userId: user.id }
