@@ -20,9 +20,6 @@ class UserManagementService {
 
   async getAllUsers() {
     const users = await this.#userRepository.findAll()
-    this.#eventEmitter.emitEvent(this.EVENTS.FETCHED_ALL_USERS, {
-      userCount: users.length
-    })
     return users
   }
 

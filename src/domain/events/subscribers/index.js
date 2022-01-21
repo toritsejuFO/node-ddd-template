@@ -1,8 +1,4 @@
-const subscribers = [
-  require('./FetchedAllUsersSubscriber'),
-  require('./AnotherFetchedAllUsersSubscriber'),
-  require('./activateAccountProcessor')
-]
+const subscribers = [require('./activateAccountProcessor')]
 
 module.exports = ({ EVENTS, logger, mailProvider }) => {
   return subscribers.map(
