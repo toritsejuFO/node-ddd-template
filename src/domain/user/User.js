@@ -1,7 +1,7 @@
 const { attributes } = require('structure')
 
 const User = attributes({
-  id: {
+  userId: {
     type: String
   },
   firstName: {

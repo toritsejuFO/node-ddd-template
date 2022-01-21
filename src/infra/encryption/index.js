@@ -1,11 +1,13 @@
 const bcrypt = require('bcrypt')
 
 class Encryption {
-  static encrypt(value) {
-    return bcrypt.hashSync(value)
+  #SALT = 10
+
+  encrypt(value) {
+    return bcrypt.hashSync(value, this.#SALT)
   }
 
-  static compare(value, encryptedValue) {
+  compare(value, encryptedValue) {
     return bcrypt.compareSync(value, encryptedValue)
   }
 }

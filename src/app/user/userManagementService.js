@@ -4,10 +4,17 @@ const { ValidationError } = require('../../shared/exceptions')
 class UserManagementService {
   #userRepository
   #eventEmitter
+  #encryptionService
 
-  constructor({ repository: { userRepository }, eventEmitter, EVENTS }) {
+  constructor({
+    repository: { userRepository },
+    eventEmitter,
+    encryptionService,
+    EVENTS
+  }) {
     this.#userRepository = userRepository
     this.#eventEmitter = eventEmitter
+    this.#encryptionService = encryptionService
     this.EVENTS = EVENTS
   }
 
@@ -34,6 +41,7 @@ class UserManagementService {
       throw new ValidationError('User with email exists')
     }
 
+    user.password = this.#encryptionService.encrypt(user.password)
     const createdUser = await this.#userRepository.create(user)
     return createdUser.toJSON()
   }
