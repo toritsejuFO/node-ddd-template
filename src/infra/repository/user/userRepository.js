@@ -22,7 +22,7 @@ class UserRepository {
   async findOneBy(params) {
     try {
       const user = await this.#User.findOne({ where: params })
-      UserMapper.toEntity(user)
+      return UserMapper.toEntity(user)
     } catch (error) {
       this.logger.error(error)
       throw new DatabaseException('Error fetching users from DB with params')

@@ -35,9 +35,7 @@ class AuthManagementService {
       throw new ValidationError('Email or password is invalid')
     }
 
-    const payload = { email: user.email, userId: user.id }
-    const authToken = this.#jwtService.encode(payload)
-
+    const authToken = this.#jwtService.encode(user.tokenizablePayload())
     return authToken
   }
 }

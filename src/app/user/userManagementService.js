@@ -20,7 +20,7 @@ class UserManagementService {
 
   async getAllUsers() {
     const users = await this.#userRepository.findAll()
-    return users
+    return users.map((user) => user.serialize())
   }
 
   async createANewUser(newUserParams) {
@@ -42,9 +42,9 @@ class UserManagementService {
     const createdUser = await this.#userRepository.create(user)
     this.#eventEmitter.emitEvent(
       this.EVENTS.NEW_USER_CREATED,
-      createdUser.toJSON()
+      createdUser.serialize()
     )
-    return createdUser.toJSON()
+    return createdUser.serialize()
   }
 }
 

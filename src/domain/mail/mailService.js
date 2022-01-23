@@ -3,12 +3,12 @@ class MailService {
     this.mailProvider = mailProvider
   }
 
-  sendActivationEmail(createdUser) {
+  sendActivationEmail(user) {
     this.mailProvider.sendMail({
-      to: createdUser.email,
+      to: user.email,
       subject: 'Activate your account',
       template: 'new-user-created',
-      data: createdUser
+      data: user
     })
   }
 }
