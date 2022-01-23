@@ -19,6 +19,18 @@ const User = attributes({
   password: {
     type: String
   }
-})(class User {})
+})(
+  class User {
+    serialize() {
+      const user = this.toJSON()
+      delete user.password
+      return user
+    }
+
+    tokenizablePayload() {
+      return { email: this.email, userId: this.userId }
+    }
+  }
+)
 
 module.exports = User

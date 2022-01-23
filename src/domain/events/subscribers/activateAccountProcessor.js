@@ -7,12 +7,12 @@ class ActivateAccountProcessor {
     this.EVENT = EVENTS.NEW_USER_CREATED
   }
 
-  handler(createdUser) {
+  handler(user) {
     this.logger.info(
       `Event::${this.EVENT} - Subscriber::${this.constructor.name} -`,
-      createdUser
+      user
     )
-    this.mailService.sendActivationEmail(createdUser)
+    this.mailService.sendActivationEmail(user)
   }
 }
 
