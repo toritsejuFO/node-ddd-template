@@ -2,7 +2,8 @@ const User = require('../../../domain/user/User')
 
 class UserMapper {
   static toEntity(dbEntity) {
-    return new User(dbEntity && dbEntity.dataValues)
+    const dataValues = dbEntity && dbEntity.dataValues
+    return dataValues ? new User(dataValues) : null
   }
 }
 
