@@ -3,10 +3,12 @@ const nodemailer = require('nodemailer')
 const getTemplate = require('./getTemplate')
 
 class MailProvider {
+  #transporter
+
   constructor({ config, logger }) {
     this.config = config
     this.logger = logger
-    this.transporter = nodemailer.createTransport({
+    this.#transporter = nodemailer.createTransport({
       host: config.mail.host,
       port: config.mail.port,
       secure: true,
@@ -18,7 +20,7 @@ class MailProvider {
   }
 
   async sendMail({ to, subject, template, data }) {
-    const response = await this.transporter.sendMail({
+    const response = await this.#transporter.sendMail({
       from: this.config.mail.user,
       to,
       subject,
