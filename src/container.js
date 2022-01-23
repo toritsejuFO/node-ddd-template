@@ -12,7 +12,8 @@ const MailProvider = require('./infra/mail/mailProvider')
 const JWT = require('./infra/jwt')
 
 // Management Classes
-const { UserManagementService, AuthManagementService } = require('./app/user')
+const { UserManagementService } = require('./app/user')
+const { AuthManagementService } = require('./app/auth')
 
 // Middlewares
 const {
@@ -55,7 +56,6 @@ container.register({
   eventEmitter: asClass(EventEmitter).singleton()
 
   // Domain Services
-
 })
 
 module.exports = container
