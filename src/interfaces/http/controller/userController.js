@@ -10,17 +10,17 @@ const { isOfType } = require('../../../shared/errors')
 VALIDATION_ERROR = 'ValidationError'
 
 class UserController {
-  constructor() {
+  constructor({ userManagementService, authGuard }) {
+    this.userManagementService = userManagementService
+
     const router = Router()
-    router.get('/users', this.getAllUsers)
-    router.post('/user/create', this.createANewUser)
+    router.get('/users', authGuard, this.getAllUsers.bind(this))
+    router.post('/user/create', authGuard, this.createANewUser.bind(this))
     return router
   }
 
   getAllUsers(req, res, next) {
-    const { userManagementService } = container.cradle
-
-    return userManagementService
+    return this.userManagementService
       .getAllUsers()
       .then((users) => {
         return res.status(OK).json({ success: true, data: users })
@@ -29,10 +29,9 @@ class UserController {
   }
 
   createANewUser(req, res, next) {
-    const { userManagementService } = container.cradle
     const newUserParams = req.body
 
-    return userManagementService
+    return this.userManagementService
       .createANewUser(newUserParams)
       .then((user) => {
         return res.status(CREATED).json({ success: true, data: user })
