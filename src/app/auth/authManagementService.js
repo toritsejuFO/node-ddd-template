@@ -1,5 +1,5 @@
 const Login = require('../../domain/auth/Login')
-const { ValidationError } = require('../../shared/exceptions')
+const { ValidationError } = require('../../shared/errors')
 
 class AuthManagementService {
   #userRepository

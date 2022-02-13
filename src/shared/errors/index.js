@@ -1,8 +1,8 @@
-const BaseException = require('./BaseException')
+const BaseError = require('./BaseError')
 
-class DatabaseException extends BaseException {}
+class DatabaseError extends BaseError {}
 
-class ValidationError extends BaseException {
+class ValidationError extends BaseError {
   constructor(message, error) {
     super(message)
     if (error) {
@@ -20,7 +20,7 @@ const isOfAny = (error, typeArray) => {
 }
 
 module.exports = {
-  DatabaseException,
+  DatabaseError,
   ValidationError,
   isOfType,
   isOfAny

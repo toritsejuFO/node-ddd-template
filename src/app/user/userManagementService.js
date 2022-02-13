@@ -1,5 +1,5 @@
 const User = require('../../domain/user/User')
-const { ValidationError } = require('../../shared/exceptions')
+const { ValidationError } = require('../../shared/errors')
 
 class UserManagementService {
   #userRepository

@@ -4,7 +4,7 @@ const {
 } = require('http-status-codes')
 
 const container = require('../../../container')
-const { isOfType } = require('../../../shared/exceptions')
+const { isOfType } = require('../../../shared/errors')
 
 // Error
 VALIDATION_ERROR = 'ValidationError'

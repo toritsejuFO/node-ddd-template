@@ -1,4 +1,4 @@
-class BaseException extends Error {
+class BaseError extends Error {
   constructor(message) {
     if (typeof message === 'object') {
       super(JSON.stringify(message))
@@ -8,4 +8,4 @@ class BaseException extends Error {
   }
 }
 
-module.exports = BaseException
+module.exports = BaseError
