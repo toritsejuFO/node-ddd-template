@@ -1,8 +1,13 @@
 const { Router } = require('express')
-const { StatusCodes } = require('http-status-codes')
+const {
+  StatusCodes: { OK, CREATED, BAD_REQUEST }
+} = require('http-status-codes')
 
 const container = require('../../../container')
 const { isOfType } = require('../../../shared/exceptions')
+
+// Error
+VALIDATION_ERROR = 'ValidationError'
 
 class UserController {
   constructor() {
@@ -18,7 +23,7 @@ class UserController {
     return userManagementService
       .getAllUsers()
       .then((users) => {
-        return res.status(StatusCodes.OK).json({ success: true, data: users })
+        return res.status(OK).json({ success: true, data: users })
       })
       .catch((error) => next(error))
   }
@@ -30,13 +35,11 @@ class UserController {
     return userManagementService
       .createANewUser(newUserParams)
       .then((user) => {
-        return res
-          .status(StatusCodes.CREATED)
-          .json({ success: true, data: user })
+        return res.status(CREATED).json({ success: true, data: user })
       })
       .catch((error) => {
-        if (isOfType(error, 'ValidationError')) {
-          return res.status(StatusCodes.BAD_REQUEST).json({
+        if (isOfType(error, VALIDATION_ERROR)) {
+          return res.status(BAD_REQUEST).json({
             success: false,
             message: error.message,
             error: error.error
