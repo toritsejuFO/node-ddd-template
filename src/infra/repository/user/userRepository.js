@@ -1,4 +1,4 @@
-const { DatabaseException } = require('../../../shared/exceptions')
+const { DatabaseError } = require('../../../shared/errors')
 const UserMapper = require('./userMapper')
 
 class UserRepository {
@@ -15,7 +15,7 @@ class UserRepository {
       return users.map(UserMapper.toEntity)
     } catch (error) {
       this.logger.error(error)
-      throw new DatabaseException('Error fetching users from DB')
+      throw new DatabaseError('Error fetching users from DB')
     }
   }
 
@@ -25,7 +25,7 @@ class UserRepository {
       return UserMapper.toEntity(user)
     } catch (error) {
       this.logger.error(error)
-      throw new DatabaseException('Error fetching users from DB with params')
+      throw new DatabaseError('Error fetching users from DB with params')
     }
   }
 
@@ -34,7 +34,7 @@ class UserRepository {
       return await this.#User.count(params)
     } catch (error) {
       this.logger.error(error)
-      throw new DatabaseException('Error performing count operation')
+      throw new DatabaseError('Error performing count operation')
     }
   }
 
@@ -44,7 +44,7 @@ class UserRepository {
       return UserMapper.toEntity(dbUser)
     } catch (error) {
       this.logger.error(error)
-      throw new DatabaseException('Failed to persist user to DB')
+      throw new DatabaseError('Failed to persist user to DB')
     }
   }
 }

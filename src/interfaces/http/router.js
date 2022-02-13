@@ -2,14 +2,20 @@ const { Router } = require('express')
 
 const controller = require('./controller')
 
-module.exports = ({ exceptionHandler, invalidRouteHandler, routeLogger }) => {
+module.exports = ({
+  errorHandler,
+  invalidRouteHandler,
+  routeLogger,
+  authGuard,
+  userManagementService
+}) => {
   const router = Router()
 
   router.use(routeLogger)
-  router.use(controller('userController'))
-  router.use(controller('authController'))
+  router.use(controller('userController', { authGuard, userManagementService }))
+  router.use(controller('authController', { authGuard }))
   router.use(invalidRouteHandler)
-  router.use(exceptionHandler)
+  router.use(errorHandler)
 
   return router
 }

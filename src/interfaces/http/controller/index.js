@@ -1,10 +1,10 @@
 const path = require('path')
 
-module.exports = (controller) => {
+module.exports = (controller, dependencies) => {
   const controllerPath = path.resolve(
     'src/interfaces/http/controller',
     controller
   )
   const Controller = require(controllerPath)
-  return new Controller()
+  return new Controller(dependencies)
 }

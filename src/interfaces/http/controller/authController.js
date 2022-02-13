@@ -2,7 +2,7 @@ const { Router } = require('express')
 const { StatusCodes } = require('http-status-codes')
 
 const container = require('../../../container')
-const { isOfType } = require('../../../shared/exceptions')
+const { isOfType } = require('../../../shared/errors')
 
 class AuthController {
   constructor() {

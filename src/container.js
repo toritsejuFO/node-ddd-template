@@ -17,9 +17,10 @@ const { AuthManagementService } = require('./app/auth')
 
 // Middlewares
 const {
-  exceptionHandler,
+  errorHandler,
   invalidRouteHandler,
-  routeLogger
+  routeLogger,
+  authGuard
 } = require('./interfaces/http/middleware')
 
 // Events/Event Subscribers
@@ -46,9 +47,10 @@ container.register({
   authManagementService: asClass(AuthManagementService).singleton(),
 
   // Middlewares
-  exceptionHandler: asFunction(exceptionHandler).singleton(),
+  errorHandler: asFunction(errorHandler).singleton(),
   invalidRouteHandler: asFunction(invalidRouteHandler).singleton(),
   routeLogger: asFunction(routeLogger).singleton(),
+  authGuard: asFunction(authGuard).singleton(),
 
   // Events/Event Subscribers
   subscribers: asFunction(Subscribers).singleton(),

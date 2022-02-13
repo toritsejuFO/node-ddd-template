@@ -1,9 +1,11 @@
-const exceptionHandler = require('./exceptionHandler')
+const errorHandler = require('./errorHandler')
 const invalidRouteHandler = require('./invalidRouteHandler')
 const routeLogger = require('./routeLogger')
+const authGuard = require('./authGuard')
 
 module.exports = {
-  exceptionHandler,
+  errorHandler,
   invalidRouteHandler,
-  routeLogger
+  routeLogger,
+  authGuard
 }
