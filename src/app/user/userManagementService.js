@@ -46,6 +46,11 @@ class UserManagementService {
     )
     return createdUser.serialize()
   }
+
+  async getUserById(userId) {
+    const user = await this.#userRepository.findOneBy({ userId })
+    return user && user.serialize()
+  }
 }
 
 module.exports = UserManagementService
