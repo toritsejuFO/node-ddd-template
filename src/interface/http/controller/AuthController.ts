@@ -3,13 +3,14 @@ import { StatusCodes } from 'http-status-codes'
 
 import { isOfType } from '../../../shared/errors/ErrorValidation'
 import ValidationError from '../../../shared/errors/ValidationError'
-import IAuthManager from '../../../app/services/api/AuthManager'
+import AuthManager from '../../../app/services/api/AuthManager'
 
 export default class AuthController {
-  authManager: IAuthManager
+  authManager: AuthManager
 
-  constructor(authManager: IAuthManager) {
+  constructor(authManager: AuthManager) {
     this.authManager = authManager
+    this.login = this.login.bind(this)
   }
 
   async login(req: Request, res: Response, next: NextFunction) {

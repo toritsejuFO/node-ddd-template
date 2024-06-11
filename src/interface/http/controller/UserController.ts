@@ -10,9 +10,14 @@ export default class UserController {
 
   constructor(userManager: UserManager) {
     this.userManager = userManager
+    this.getAllUsers = this.getAllUsers.bind(this)
+    this.createANewUser = this.createANewUser.bind(this)
+    this.getCurrentUser = this.getCurrentUser.bind(this)
+    this.getUserById = this.getUserById.bind(this)
   }
 
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
+    console.log(this)
     return this.userManager
       .getAllUsers()
       .then((users) => {
