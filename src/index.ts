@@ -1,13 +1,14 @@
-import container from './onboarding/container'
+import container from './container'
+import { IApp } from './App'
 
-const app = container.resolve('app')
+const app: IApp = container.resolve('app')
 
 app
-  .start()
+  .start(container)
   .then(() => {
     app.logger.info(':::APP STARTED:::')
   })
-  .catch((error: any) => {
+  .catch((error) => {
     app.logger.error(error)
     app.logger.error(':::APP FAILED TO START:::')
     process.exit(1)

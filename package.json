@@ -30,7 +30,8 @@
     "nodemailer": "^6.7.2",
     "pg": "^8.12.0",
     "sequelize": "^7.0.0-alpha.2",
-    "structure": "^2.0.1"
+    "structure": "^2.0.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@faker-js/faker": "^6.0.0-alpha.3",
