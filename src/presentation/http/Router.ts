@@ -1,32 +1,18 @@
-import { Request, Response, Express } from 'express'
+import { Express } from 'express'
 import { AwilixContainer } from 'awilix'
 
 const USER_CONTROLLER = 'userController'
 const AUTH_CONTROLLER = 'authController'
 
 export default class Router {
-  routeLogger: any
-  errorHandler: any
-  invalidRouteHandler: any
-  authGuard: any
-
   constructor(
-    routeLogger: any,
-    errorHandler: any,
-    invalidRouteHandler: any,
-    authGuard: any
-  ) {
-    this.routeLogger = routeLogger
-    this.errorHandler = errorHandler
-    this.invalidRouteHandler = invalidRouteHandler
-    this.authGuard = authGuard
-  }
+    private readonly routeLogger: any,
+    private readonly errorHandler: any,
+    private readonly invalidRouteHandler: any,
+    private readonly authGuard: any
+  ) {}
 
   setupRoutes(server: Express, container: AwilixContainer) {
-    server.use((req, res, next) => {
-      req.scope = container.createScope()
-      next()
-    })
     server.use(this.routeLogger)
 
     // User routes
@@ -53,6 +39,7 @@ export default class Router {
 
     // Auth routes
     server.post('/login', container.resolve(AUTH_CONTROLLER).login)
+
     server.use(this.invalidRouteHandler)
     server.use(this.errorHandler)
   }

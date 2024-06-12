@@ -3,13 +3,10 @@ import { StatusCodes } from 'http-status-codes'
 
 import { isOfType } from '../../../shared/errors/ErrorValidation'
 import ValidationError from '../../../shared/errors/ValidationError'
-import UserManager from '../../../app/services/api/UserManager'
+import UserManager from '../../../app/services/api/UserManager.interface'
 
 export default class UserController {
-  private readonly userManager: UserManager
-
-  constructor(userManager: UserManager) {
-    this.userManager = userManager
+  constructor(private readonly userManager: UserManager) {
     this.getAllUsers = this.getAllUsers.bind(this)
     this.createANewUser = this.createANewUser.bind(this)
     this.getCurrentUser = this.getCurrentUser.bind(this)
@@ -17,7 +14,6 @@ export default class UserController {
   }
 
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
-    console.log(this)
     return this.userManager
       .getAllUsers()
       .then((users) => {

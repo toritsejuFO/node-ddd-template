@@ -1,22 +1,16 @@
 import Login from '../../domain/auth/Login'
-import UserRepository from '../../domain/repository/UserRepository'
+import UserRepository from '../../domain/repository/UserRepository.interface'
+import { Encryption } from '../../infra/encryption'
+import { JWT } from '../../infra/jwt'
 import ValidationError from '../../shared/errors/ValidationError'
-import AuthManager from './api/AuthManager'
+import AuthManager from './api/AuthManager.interface'
 
 export default class implements AuthManager {
-  readonly userRepository
-  readonly encryptionService
-  readonly jwtService
-
   constructor(
-    userRepository: UserRepository,
-    encryptionService: any,
-    jwtService: any
-  ) {
-    this.userRepository = userRepository
-    this.encryptionService = encryptionService
-    this.jwtService = jwtService
-  }
+    private readonly userRepository: UserRepository,
+    private readonly encryptionService: Encryption,
+    private readonly jwtService: JWT
+  ) {}
 
   async login(loginParams: any) {
     const { email, password } = loginParams

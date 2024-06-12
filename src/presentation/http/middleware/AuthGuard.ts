@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import UserRepository from '../../../domain/repository/UserRepository'
+import UserRepository from '../../../domain/repository/UserRepository.interface'
 
 export default (jwtService: any, userRepository: UserRepository) =>
   async (req: Request, res: Response, next: NextFunction) => {

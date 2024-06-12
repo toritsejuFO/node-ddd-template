@@ -2,15 +2,18 @@ import DatabaseError from '../../../shared/errors/DatabaseError'
 import UserMapper from './UserMapper'
 import Database from '../../database'
 import { Logger } from '../../logger'
-import UserRepository from '../../../domain/repository/UserRepository'
+import UserRepository from '../../../domain/repository/UserRepository.interface'
 
 export default class implements UserRepository {
-  readonly user: any
-  readonly logger: Logger
+  private readonly user: any
 
-  constructor(database: Database, logger: Logger) {
-    this.user = database.instance.models.User
-    this.logger = logger
+  constructor(
+    private readonly database: Database,
+    private readonly logger: Logger
+  ) {
+    // logger.info('UserRepository instantiated')
+    // logger.info(database.instance.models)
+    this.user = this.database.instance.models.User
   }
 
   async findAll() {

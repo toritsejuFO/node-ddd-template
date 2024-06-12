@@ -12,11 +12,14 @@ export interface Database {
 export default class implements Database {
   readonly instance: any
 
-  constructor(config: Config, logger: Logger) {
+  constructor(
+    private readonly config: Config,
+    private readonly logger: Logger
+  ) {
     if (config.db) {
-      this.instance = sequelize(config)
+      this.instance = sequelize(this.config)
     } else {
-      logger.error('DB_ERROR, missing config. Exiting.')
+      this.logger.error('DB_ERROR, missing config. Exiting.')
       process.exit(1)
     }
   }

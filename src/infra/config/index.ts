@@ -9,7 +9,7 @@ const config = {
     }
   },
   jwt: {
-    secret: process.env.JWT_SECRET
+    secret: String(process.env.JWT_SECRET)
   },
   mail: {
     from: process.env.ADMIN_MAIL,

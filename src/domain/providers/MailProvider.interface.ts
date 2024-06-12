@@ -5,6 +5,6 @@ export interface MailParams {
   data: string
 }
 
-export interface IMailProvider {
+export default interface MailProvider {
   sendMail(mailParams: MailParams): Promise<void>
 }

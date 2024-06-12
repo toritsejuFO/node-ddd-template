@@ -1,25 +1,15 @@
-import UserRepository from '../../domain/repository/UserRepository'
-import User from '../../domain/user/User'
+import UserRepository from '../../domain/repository/UserRepository.interface'
+import User from '../../domain/entities/user/User'
 import ValidationError from '../../shared/errors/ValidationError'
-import UserManager from './api/UserManager'
+import UserManager from './api/UserManager.interface'
+import NewUserCreatedEvent from '../../domain/events/NewUserCreatedEvent'
 
 export default class implements UserManager {
-  readonly userRepository: any
-  readonly eventEmitter: any
-  readonly encryptionService: any
-  readonly EVENTS: any
-
   constructor(
-    userRepository: UserRepository,
-    eventEmitter: any,
-    encryptionService: any,
-    EVENTS: any
-  ) {
-    this.userRepository = userRepository
-    this.eventEmitter = eventEmitter
-    this.encryptionService = encryptionService
-    this.EVENTS = EVENTS
-  }
+    private readonly userRepository: UserRepository,
+    private readonly eventPublisher: any,
+    private readonly encryptionService: any
+  ) {}
 
   async getAllUsers() {
     const users = await this.userRepository.findAll()
@@ -43,9 +33,8 @@ export default class implements UserManager {
 
     user.password = this.encryptionService.encrypt(user.password)
     const createdUser = await this.userRepository.create(user)
-    this.eventEmitter.emitEvent(
-      this.EVENTS.NEW_USER_CREATED,
-      createdUser.serialize()
+    this.eventPublisher.publishEvent(
+      new NewUserCreatedEvent(createdUser.serialize())
     )
     return createdUser.serialize()
   }

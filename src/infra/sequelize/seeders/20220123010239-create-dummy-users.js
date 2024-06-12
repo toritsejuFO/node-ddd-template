@@ -1,6 +1,6 @@
 'use strict'
 const faker = require('@faker-js/faker')
-const Encryption = require('../../encryption')
+const Encryption = require('../../encryption').default
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {

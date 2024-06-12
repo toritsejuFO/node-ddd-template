@@ -1,15 +1,15 @@
-import container from './container'
-import { IApp } from './App'
+import container from './Container'
+import { App } from './App'
 
-const app: IApp = container.resolve('app')
+const app: App = container.resolve('app')
 
 app
   .start(container)
   .then(() => {
-    app.logger.info(':::APP STARTED:::')
+    app.getLogger().info(':::APP STARTED:::')
   })
   .catch((error) => {
-    app.logger.error(error)
-    app.logger.error(':::APP FAILED TO START:::')
+    app.getLogger().error(error)
+    app.getLogger().error(':::APP FAILED TO START:::')
     process.exit(1)
   })

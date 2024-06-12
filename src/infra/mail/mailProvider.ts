@@ -1,26 +1,26 @@
 import { Transporter, createTransport } from 'nodemailer'
 
-import { MailParams } from './interface'
 import { Config } from '../config'
 import { Logger } from '../logger'
+import getTemplate from './GetTemplate'
+import MailProvider, {
+  MailParams
+} from '../../domain/providers/MailProvider.interface'
 
-import getTemplate from './getTemplate'
+export default class implements MailProvider {
+  private readonly transporter: Transporter
 
-export default class MailProvider {
-  config: Config
-  logger: Logger
-  transporter: Transporter
-
-  constructor(config: Config, logger: Logger) {
-    this.config = config
-    this.logger = logger
+  constructor(
+    private readonly config: Config,
+    private readonly logger: Logger
+  ) {
     this.transporter = createTransport({
-      host: config.mail.host,
-      port: config.mail.port,
+      host: this.config.mail.host,
+      port: this.config.mail.port,
       secure: true,
       auth: {
-        user: config.mail.user,
-        pass: config.mail.pass
+        user: this.config.mail.user,
+        pass: this.config.mail.pass
       }
     })
   }
@@ -35,5 +35,3 @@ export default class MailProvider {
     this.logger.info('MAIL_RESPONSE:', response)
   }
 }
-
-module.exports = MailProvider

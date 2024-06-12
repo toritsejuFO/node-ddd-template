@@ -9,11 +9,6 @@ interface User {
 }
 
 export default interface UserManager {
-  userRepository: any
-  eventEmitter: any
-  encryptionService: any
-  EVENTS: any
-
   getAllUsers(): Promise<User[]>
   createANewUser(newUserParams: NewUserParams): Promise<any>
   getUserById(userId: string): Promise<User>
