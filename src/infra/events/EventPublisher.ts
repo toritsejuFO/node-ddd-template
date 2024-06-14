@@ -11,7 +11,7 @@ export default class extends EventEmitter implements EventPublisher {
 
   publishEvent(event: Event) {
     if (event.getPayload()) {
-      return this.emit(event.getName(), event.getPayload())
+      return this.emit(event.getName(), event)
     } else {
       return this.emit(event.getName())
     }

@@ -29,8 +29,9 @@
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.2",
     "pg": "^8.12.0",
-    "sequelize": "^7.0.0-alpha.2",
-    "structure": "^2.0.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.3",
+    "types-ddd": "^3.9.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {

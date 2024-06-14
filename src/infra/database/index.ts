@@ -1,30 +1,30 @@
 import { Sequelize } from 'sequelize'
 import { Config } from '../config'
-import { Logger } from '../logger'
+import { Logger } from '../../shared/logger'
 import sequelize from '../sequelize'
 
 export interface Database {
-  instance: Sequelize
+  connection: Sequelize
 
-  start(): void
+  connect(): void
 }
 
 export default class implements Database {
-  readonly instance: any
+  readonly connection: any
 
   constructor(
     private readonly config: Config,
     private readonly logger: Logger
   ) {
     if (config.db) {
-      this.instance = sequelize(this.config)
+      this.connection = sequelize(this.config)
     } else {
       this.logger.error('DB_ERROR, missing config. Exiting.')
       process.exit(1)
     }
   }
 
-  async start() {
-    this.instance.authenticate()
+  async connect() {
+    this.connection.authenticate()
   }
 }

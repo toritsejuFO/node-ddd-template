@@ -7,15 +7,14 @@ export function init(sequelize: Sequelize) {
     {
       userId: {
         type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true
       },
-      firstName: {
+      firstname: {
         type: DataTypes.STRING,
         allowNull: false
       },
-      lastName: {
+      lastname: {
         type: DataTypes.STRING,
         allowNull: false
       },

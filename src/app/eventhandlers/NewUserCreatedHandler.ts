@@ -1,6 +1,7 @@
 import Event, { NEW_USER_CREATED } from '../../domain/events/Event.interface'
-import MailService from '../../domain/services/api/MailService.interface'
-import { Logger } from '../../infra/logger'
+import { Logger } from '../../shared/logger'
+import { UserDto } from '../dtos/UserDto'
+import MailService, { MailParams } from '../services/api/MailService.interface'
 import EventHandler from './EventHandler.interface'
 
 export default class NewUserCreatedHandler implements EventHandler {
@@ -18,10 +19,20 @@ export default class NewUserCreatedHandler implements EventHandler {
   }
 
   handler(event: Event) {
+    const user = event.getPayload()
+
     this.logger.info(
       `Event::${event.getName()} - EventHandler::${this.constructor.name} -`,
-      event.getPayload()
+      user
     )
-    this.mailService.sendActivationEmail(event.getPayload())
+
+    const mailParams: MailParams = {
+      to: user.email,
+      subject: 'Activate your account',
+      template: 'new-user-created',
+      data: user
+    }
+
+    return this.mailService.sendMail(mailParams)
   }
 }

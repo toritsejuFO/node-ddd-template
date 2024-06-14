@@ -3,7 +3,7 @@ import { AwilixContainer } from 'awilix'
 
 import { Database } from './infra/database'
 import { Config } from './infra/config'
-import { Logger } from './infra/logger'
+import { Logger } from './shared/logger'
 import EventHandler from './app/eventhandlers/EventHandler.interface'
 import EventPublisher from './domain/events/EventPublisher.interface'
 
@@ -25,6 +25,7 @@ export default class implements App {
     private readonly eventHandlers: EventHandler[]
   ) {
     this.server = express()
+    this.database.connect()
   }
 
   async start(container: AwilixContainer) {
@@ -38,9 +39,6 @@ export default class implements App {
     this.eventHandlers.map((h: EventHandler) =>
       this.eventPublisher.registerHandler(h)
     )
-
-    // Start the database connection
-    this.database.start()
 
     // Start the server
     const { port } = this.config.app

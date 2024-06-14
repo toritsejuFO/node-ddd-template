@@ -1,8 +1,7 @@
 import BaseError from './BaseError'
-import ValidationError from './ValidationError'
 import DatabaseError from './DatabaseError'
 
-declare type CustomErrorType = BaseError | ValidationError | DatabaseError
+declare type CustomErrorType = BaseError | DatabaseError
 
 export const isOfType = (runtimeError: CustomErrorType, error: string) => {
   return runtimeError?.constructor?.name === error

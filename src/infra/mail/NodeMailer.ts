@@ -1,13 +1,13 @@
 import { Transporter, createTransport } from 'nodemailer'
 
 import { Config } from '../config'
-import { Logger } from '../logger'
+import { Logger } from '../../shared/logger'
 import getTemplate from './GetTemplate'
-import MailProvider, {
+import MailService, {
   MailParams
-} from '../../domain/providers/MailProvider.interface'
+} from '../../app/services/api/MailService.interface'
 
-export default class implements MailProvider {
+export default class implements MailService {
   private readonly transporter: Transporter
 
   constructor(

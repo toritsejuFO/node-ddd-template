@@ -16,31 +16,36 @@ import AuthManager from './app/services/AuthManager'
 // EventHandlers
 import NewUserCreatedHandler from './app/eventhandlers/NewUserCreatedHandler'
 
-// Domain Services
-import MailService from './domain/services/MailService'
+// Domain
+import {
+  ToDtoAdapter,
+  ToDomainAdapter,
+  ToPersistenceAdapter
+} from './domain/adapters/UserAdapter'
+import UserService from './domain/services/UserService'
 
 // Infra
 import Config from './infra/config'
 import Database from './infra/database'
-import Logger from './infra/logger'
+import Logger from './shared/logger'
 import Encryption from './infra/encryption'
-import MailProvider from './infra/mail/MailProvider'
+import NodeMailer from './infra/mail/NodeMailer'
 import JWT from './infra/jwt'
 import EventPublisher from './infra/events/EventPublisher'
 
 // Repositories
-import UserRepository from './infra/repository/user/UserRepository'
+import UserRepository from './infra/repositories/user/UserRepository'
 
 // Presentation
 import Router from './presentation/http/Router'
-import routeLogger from './presentation/http/middleware/RouteLogger'
-import errorHandler from './presentation/http/middleware/ErrorHandler'
-import authGuard from './presentation/http/middleware/AuthGuard'
-import invalidRouteHandler from './presentation/http/middleware/InvalidRouteHandler'
+import routeLogger from './presentation/http/middlewares/RouteLogger'
+import errorHandler from './presentation/http/middlewares/ErrorHandler'
+import authGuard from './presentation/http/middlewares/AuthGuard'
+import invalidRouteHandler from './presentation/http/middlewares/InvalidRouteHandler'
 
 // Controllers
-import UserController from './presentation/http/controller/UserController'
-import AuthController from './presentation/http/controller/AuthController'
+import UserController from './presentation/http/controllers/UserController'
+import AuthController from './presentation/http/controllers/AuthController'
 
 const container = createContainer({ injectionMode: InjectionMode.CLASSIC })
 
@@ -55,15 +60,18 @@ container.register({
   // EventHandlers
   eventHandlers: asArray([asClass(NewUserCreatedHandler).singleton()]),
 
-  // Domain Services
-  mailService: asClass(MailService).singleton(),
+  // Domain
+  toDtoAdapter: asClass(ToDtoAdapter).singleton(),
+  toDomainAdapter: asClass(ToDomainAdapter).singleton(),
+  toPersistenceAdapter: asClass(ToPersistenceAdapter).singleton(),
+  userService: asClass(UserService).singleton(),
 
   // Infra
   config: asValue(Config),
   database: asClass(Database).singleton(),
-  logger: asFunction(Logger),
+  logger: asFunction(Logger).singleton(),
   encryptionService: asClass(Encryption).singleton(),
-  mailProvider: asClass(MailProvider).singleton(),
+  mailService: asClass(NodeMailer).singleton(),
   jwtService: asClass(JWT).singleton(),
   eventPublisher: asClass(EventPublisher).singleton(),
 
@@ -78,8 +86,8 @@ container.register({
   invalidRouteHandler: asFunction(invalidRouteHandler).singleton(),
 
   // Controllers
-  userController: asClass(UserController).singleton(),
-  authController: asClass(AuthController).singleton()
+  userController: asClass(UserController).scoped(),
+  authController: asClass(AuthController).scoped()
 })
 
 function asArray<T>(resolvers: Resolver<T>[]): Resolver<T[]> {

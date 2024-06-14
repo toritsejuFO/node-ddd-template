@@ -1,11 +1,7 @@
 import { hashSync, compareSync } from 'bcrypt'
+import EncryptionService from '../../app/services/api/EncryptionService.interface'
 
-export interface Encryption {
-  encrypt(value: string): string
-  compare(value: string, encryptedValue: string): boolean
-}
-
-export default class implements Encryption {
+export default class implements EncryptionService {
   private readonly SALT = 10
 
   encrypt(value: string) {

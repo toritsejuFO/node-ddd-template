@@ -2,9 +2,9 @@ export interface MailParams {
   to: string
   subject: string
   template: string
-  data: string
+  data: any
 }
 
-export default interface MailProvider {
+export default interface MailService {
   sendMail(mailParams: MailParams): Promise<void>
 }

@@ -1,37 +1,32 @@
-import Login from '../../domain/auth/Login'
-import UserRepository from '../../domain/repository/UserRepository.interface'
-import { Encryption } from '../../infra/encryption'
-import { JWT } from '../../infra/jwt'
-import ValidationError from '../../shared/errors/ValidationError'
+import { Result } from 'types-ddd'
+
+import UserRepository from '../../domain/repositories/UserRepository.interface'
 import AuthManager from './api/AuthManager.interface'
+import EncryptionService from './api/EncryptionService.interface'
+import JwtService from './api/JwtService.interface'
+import { LoginDto } from '../dtos/AuthDto'
 
 export default class implements AuthManager {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly encryptionService: Encryption,
-    private readonly jwtService: JWT
+    private readonly encryptionService: EncryptionService,
+    private readonly jwtService: JwtService
   ) {}
 
-  async login(loginParams: any) {
-    const { email, password } = loginParams
-    const login = new Login({ email, password })
+  async login(loginDto: LoginDto) {
+    const { email, password } = loginDto
 
-    let { valid, errors } = login.validate()
-    if (!valid) {
-      throw new ValidationError('Email or password not provided', errors)
-    }
-
-    const user = await this.userRepository.findOneBy({ email: login.email })
+    const user = await this.userRepository.findOneByEmail(email)
     if (!user) {
-      throw new ValidationError('Email or password is invalid')
+      return Result.fail('User not found')
     }
 
-    valid = this.encryptionService.compare(login.password, user.password)
+    const valid = this.encryptionService.compare(password, user.get('password'))
     if (!valid) {
-      throw new ValidationError('Email or password is invalid')
+      return Result.fail('Email or password is invalid')
     }
 
     const authToken = this.jwtService.encode(user.tokenizablePayload())
-    return authToken
+    return Result.Ok(authToken)
   }
 }

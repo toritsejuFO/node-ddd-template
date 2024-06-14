@@ -13,11 +13,10 @@ export default (config: Config) => {
     config.db.options as unknown as Dialect
   )
 
-  fs.readdirSync(MODELS_PATH).forEach((file) => {
+  fs.readdirSync(MODELS_PATH).forEach(async (file) => {
     const modelPath = path.resolve(MODELS_PATH, file)
-    import(modelPath).then((Model) => {
-      Model.init(sequelize)
-    })
+    const Model = require(modelPath)
+    Model.init(sequelize)
   })
 
   return sequelize

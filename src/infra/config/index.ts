@@ -1,11 +1,12 @@
 const config = {
   app: {
-    port: process.env.APP_PORT || '4300'
+    port: process.env.APP_PORT || '4300',
+    name: process.env.APP_NAME || 'App'
   },
   db: {
     url: String(process.env.DB_URI),
     options: {
-      dialect: process.env.DB_DIALECT
+      dialect: process.env.DB_DIALECT || 'postgres'
     }
   },
   jwt: {

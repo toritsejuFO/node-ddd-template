@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { Logger } from '../../../infra/logger'
+import { Logger } from '../../../shared/logger'
 
 export default (logger: Logger) =>
   (req: Request, res: Response, next: NextFunction) => {

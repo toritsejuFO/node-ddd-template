@@ -18,20 +18,19 @@ export default class Router {
     // User routes
     server.get(
       '/users',
-      // this.authGuard,
+      this.authGuard,
       container.resolve(USER_CONTROLLER).getAllUsers
     )
     server.post(
-      '/user/create',
-      this.authGuard,
+      '/user/register',
       container.resolve(USER_CONTROLLER).createANewUser
     )
-    server.post(
-      '/user/register',
+    server.get(
+      '/user/me',
       this.authGuard,
       container.resolve(USER_CONTROLLER).getCurrentUser
     )
-    server.post(
+    server.get(
       '/user/:userId',
       this.authGuard,
       container.resolve(USER_CONTROLLER).getUserById
