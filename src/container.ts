@@ -11,7 +11,6 @@ import App from './App'
 
 // Application Services
 import UserManager from './app/services/UserManager'
-import AuthManager from './app/services/AuthManager'
 
 // EventHandlers
 import NewUserCreatedHandler from './app/eventhandlers/NewUserCreatedHandler'
@@ -45,7 +44,6 @@ import invalidRouteHandler from './presentation/http/middlewares/InvalidRouteHan
 
 // Controllers
 import UserController from './presentation/http/controllers/UserController'
-import AuthController from './presentation/http/controllers/AuthController'
 
 const container = createContainer({ injectionMode: InjectionMode.CLASSIC })
 
@@ -55,7 +53,6 @@ container.register({
 
   // Application Services
   userManager: asClass(UserManager).singleton(),
-  authManager: asClass(AuthManager).singleton(),
 
   // EventHandlers
   eventHandlers: asArray([asClass(NewUserCreatedHandler).singleton()]),
@@ -86,8 +83,7 @@ container.register({
   invalidRouteHandler: asFunction(invalidRouteHandler).singleton(),
 
   // Controllers
-  userController: asClass(UserController).scoped(),
-  authController: asClass(AuthController).scoped()
+  userController: asClass(UserController).scoped()
 })
 
 function asArray<T>(resolvers: Resolver<T>[]): Resolver<T[]> {

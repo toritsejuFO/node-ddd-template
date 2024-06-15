@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes'
 import UserManager from '../../../app/services/api/UserManager.interface'
 import BaseController from './BaseController'
 import { UserSchema } from '../schema/UserSchema'
+import { LoginSchema } from '../schema/AuthSchema'
 
 export default class UserController extends BaseController {
   constructor(private readonly userManager: UserManager) {
@@ -13,6 +14,7 @@ export default class UserController extends BaseController {
     this.createANewUser = this.createANewUser.bind(this)
     this.getCurrentUser = this.getCurrentUser.bind(this)
     this.getUserById = this.getUserById.bind(this)
+    this.login = this.login.bind(this)
   }
 
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
@@ -43,6 +45,26 @@ export default class UserController extends BaseController {
       return res
         .status(StatusCodes.CREATED)
         .json({ success: true, data: result.value() })
+    } catch (error) {
+      return this.handleError(error, res, next)
+    }
+  }
+
+  async login(req: Request, res: Response, next: NextFunction) {
+    try {
+      const schema = LoginSchema.parse(req.body)
+
+      const result = await this.userManager.login(schema)
+
+      if (result.isFail()) {
+        return res
+          .status(StatusCodes.UNAUTHORIZED)
+          .json({ success: false, message: result.error() })
+      }
+
+      return res
+        .status(StatusCodes.OK)
+        .send({ success: true, data: { token: result.value() } })
     } catch (error) {
       return this.handleError(error, res, next)
     }
