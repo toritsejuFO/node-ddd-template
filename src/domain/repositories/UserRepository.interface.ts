@@ -14,8 +14,8 @@ export default interface UserRepository {
   findAll(): Promise<User[]>
   findOneById(userId: string): Promise<User>
   findOneByEmail(email: string): Promise<User>
-  existsById(userId: any): Promise<boolean>
-  existsByEmail(email: any): Promise<boolean>
+  existsById(userId: string): Promise<boolean>
+  existsByEmail(email: string): Promise<boolean>
   findOneByIdAndEmail(userId: string, email: string): Promise<User>
   save(user: User): Promise<User>
 }

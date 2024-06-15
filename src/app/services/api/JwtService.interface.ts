@@ -1,4 +1,4 @@
 export default interface JwtService {
-  encode(payload: any, options?: any): string
-  verify(token: string, options?: any): any
+  encode(payload: object, options?: object): string
+  verify(token: string, options?: object): any
 }

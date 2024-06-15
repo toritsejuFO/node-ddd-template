@@ -23,7 +23,7 @@ export default class implements UserManager {
 
   async getAllUsers() {
     const users = await this.userRepository.findAll()
-    const userDtoList = users.map((user: any) =>
+    const userDtoList = users.map((user: User) =>
       this.toDtoAdapter.build(user).value()
     )
     return Result.Ok(userDtoList)
@@ -67,7 +67,7 @@ export default class implements UserManager {
     return Result.Ok(authToken)
   }
 
-  async getUserById(id: any) {
+  async getUserById(id: string) {
     const user = await this.userRepository.findOneById(id)
     if (!user) return Result.fail('User not found')
     return Result.Ok(this.toDtoAdapter.build(user).value())

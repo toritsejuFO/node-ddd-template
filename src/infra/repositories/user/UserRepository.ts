@@ -32,7 +32,7 @@ export default class implements UserRepository {
     }
   }
 
-  private async findOneByParams(params: any): Promise<User> {
+  private async findOneByParams(params: object): Promise<User> {
     try {
       const user: UserModel = await this.user.findOne({ where: params })
       return this.toDomainAdapter.build(user).value()
@@ -52,7 +52,7 @@ export default class implements UserRepository {
     return this.findOneByParams({ email })
   }
 
-  private async existsByParams(params: any): Promise<boolean> {
+  private async existsByParams(params: object): Promise<boolean> {
     try {
       const count = await this.user.count({ where: params })
       return count === 1
