@@ -6,6 +6,8 @@ interface UserProps {
   lastname: string
   email: string
   password: string
+  isEmailVerified?: boolean
+  isActive?: boolean
   createdAt?: Date
   updatedAt?: Date
 }
@@ -19,11 +21,18 @@ export default class User extends Entity<UserProps> {
     return Result.Ok(new User(userProps))
   }
 
-  public serialize() {
-    return this.toObject()
-  }
-
   tokenizablePayload() {
     return { email: this.props.email, id: this.props.id?.value() }
+  }
+
+  activate() {
+    if (!this.props.isEmailVerified) {
+      this.props.isEmailVerified = true
+    }
+    this.props.isActive = true
+  }
+
+  isActive() {
+    return this.props.isActive
   }
 }

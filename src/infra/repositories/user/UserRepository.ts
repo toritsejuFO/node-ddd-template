@@ -32,23 +32,24 @@ export default class implements UserRepository {
     }
   }
 
-  private async findOneByParams(params: object): Promise<User> {
+  private async findOneByParams(params: object): Promise<User | null> {
     try {
       const user: UserModel = await this.user.findOne({ where: params })
+      if (!user) return null
       return this.toDomainAdapter.build(user).value()
     } catch (error) {
       this.logger.error(error)
       throw new DatabaseError(
-        'Error fetching users from DB using params: ' + params
+        'Error fetching users from DB using params: ' + JSON.stringify(params)
       )
     }
   }
 
-  async findOneById(userId: string): Promise<User> {
+  async findOneById(userId: string): Promise<User | null> {
     return this.findOneByParams({ userId })
   }
 
-  async findOneByEmail(email: string) {
+  async findOneByEmail(email: string): Promise<User | null> {
     return this.findOneByParams({ email })
   }
 
@@ -73,7 +74,17 @@ export default class implements UserRepository {
   async save(user: User): Promise<User> {
     try {
       const userModel: UserModel = this.toPersistenceAdapter.build(user).value()
-      const savedUser = await this.user.create(userModel)
+      let savedUser
+
+      if (await this.existsById(userModel.userId)) {
+        savedUser = await this.user.update(userModel, {
+          where: { userId: userModel.userId }
+        })
+        return user
+      } else {
+        savedUser = await this.user.create(userModel)
+      }
+
       return this.toDomainAdapter.build(savedUser).value()
     } catch (error) {
       this.logger.error(error)
@@ -81,7 +92,10 @@ export default class implements UserRepository {
     }
   }
 
-  async findOneByIdAndEmail(userId: string, email: string): Promise<User> {
+  async findOneByIdAndEmail(
+    userId: string,
+    email: string
+  ): Promise<User | null> {
     try {
       return this.findOneByParams({ userId, email })
     } catch (error) {

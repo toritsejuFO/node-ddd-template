@@ -6,7 +6,7 @@ export function init(sequelize: Sequelize) {
   User.init(
     {
       userId: {
-        type: DataTypes.UUID,
+        type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true
       },
@@ -26,6 +26,16 @@ export function init(sequelize: Sequelize) {
       password: {
         type: DataTypes.STRING,
         allowNull: false
+      },
+      isEmailVerified: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       }
     },
     { sequelize, tableName: 'users', modelName: 'User' }

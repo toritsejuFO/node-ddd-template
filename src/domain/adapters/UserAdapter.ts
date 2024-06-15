@@ -12,6 +12,8 @@ export class ToDomainAdapter implements IAdapter<UserModel, User> {
       lastname: userModel.lastname,
       email: userModel.email,
       password: userModel.password,
+      isEmailVerified: userModel.isEmailVerified,
+      isActive: userModel.isActive,
       createdAt: userModel.createdAt,
       updatedAt: userModel.updatedAt
     })
@@ -30,6 +32,8 @@ export class ToPersistenceAdapter implements IAdapter<User, UserModel> {
       lastname: userObject.lastname,
       email: userObject.email,
       password: userObject.password,
+      isEmailVerified: userObject.isEmailVerified,
+      isActive: userObject.isActive,
       createdAt: userObject.createdAt,
       updatedAt: userObject.updatedAt
     }
@@ -47,6 +51,8 @@ export class ToDtoAdapter implements IAdapter<User, Omit<UserDto, 'password'>> {
       firstname: userObject.firstname,
       lastname: userObject.lastname,
       email: userObject.email,
+      isEmailVerified: userObject.isEmailVerified,
+      isActive: userObject.isActive,
       createdAt: userObject.createdAt,
       updatedAt: userObject.updatedAt
     }

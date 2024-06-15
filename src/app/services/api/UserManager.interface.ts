@@ -1,10 +1,17 @@
 import { Result } from 'types-ddd'
-import { UserDtoCreate, UserDto } from '../../dtos/UserDto'
-import { LoginDto } from '../../dtos/AuthDto'
+import {
+  UserDtoCreate,
+  UserDto,
+  LoginDto,
+  ActivateAccountDto
+} from '../../dtos/UserDto'
 
 export default interface UserManager {
   getAllUsers(): Promise<Result<UserDto[]>>
-  createANewUser(userDto: UserDtoCreate): Promise<Result<UserDto | void>>
+  registerUser(userDto: UserDtoCreate): Promise<Result<UserDto | void>>
   login(loginDto: LoginDto): Promise<Result<string | void>>
-  getUserById(userId: string): Promise<Result<UserDto | void>>
+  getUserById(id: string): Promise<Result<UserDto | void>>
+  activateAccount(
+    activateAccountDto: ActivateAccountDto
+  ): Promise<Result<string>>
 }

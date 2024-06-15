@@ -7,9 +7,13 @@ import NewUserCreatedEvent from '../../domain/events/NewUserCreatedEvent'
 import UserService from '../../domain/services/api/UserService.interface'
 import EncryptionService from './api/EncryptionService.interface'
 import EventPublisher from '../../domain/events/EventPublisher.interface'
-import { UserDtoCreate, UserDto } from '../dtos/UserDto'
+import {
+  UserDtoCreate,
+  UserDto,
+  LoginDto,
+  ActivateAccountDto
+} from '../dtos/UserDto'
 import JwtService from './api/JwtService.interface'
-import { LoginDto } from '../dtos/AuthDto'
 
 export default class implements UserManager {
   constructor(
@@ -29,7 +33,7 @@ export default class implements UserManager {
     return Result.Ok(userDtoList)
   }
 
-  async createANewUser(userDto: UserDtoCreate) {
+  async registerUser(userDto: UserDtoCreate) {
     const result = await this.userService.registerUser(userDto)
     if (result.isFail()) {
       return Result.fail(result.error(), result.metaData())
@@ -55,12 +59,12 @@ export default class implements UserManager {
 
     const user = await this.userRepository.findOneByEmail(email)
     if (!user) {
-      return Result.fail('User not found')
+      return Result.fail('Invalid email or password')
     }
 
     const valid = this.encryptionService.compare(password, user.get('password'))
     if (!valid) {
-      return Result.fail('Email or password is invalid')
+      return Result.fail('Invalid email or password')
     }
 
     const authToken = this.jwtService.encode(user.tokenizablePayload())
@@ -71,5 +75,22 @@ export default class implements UserManager {
     const user = await this.userRepository.findOneById(id)
     if (!user) return Result.fail('User not found')
     return Result.Ok(this.toDtoAdapter.build(user).value())
+  }
+
+  async activateAccount(
+    activateAccountDto: ActivateAccountDto
+  ): Promise<Result<string>> {
+    const { token } = activateAccountDto
+    const { email, id } = this.jwtService.verify(token)
+
+    const user = await this.userRepository.findOneByIdAndEmail(id, email)
+    if (!user) return Result.fail('Invalid token received')
+
+    if (!user.isActive()) {
+      user.activate()
+      await this.userRepository.save(user)
+    }
+
+    return Result.Ok('Account activated successfully')
   }
 }

@@ -22,7 +22,7 @@ export default class Router {
     )
     server.post(
       '/user/register',
-      container.resolve(USER_CONTROLLER).createANewUser
+      container.resolve(USER_CONTROLLER).registerUser
     )
     server.post('/user/login', container.resolve(USER_CONTROLLER).login)
     server.get(
@@ -31,7 +31,11 @@ export default class Router {
       container.resolve(USER_CONTROLLER).getCurrentUser
     )
     server.get(
-      '/user/:userId',
+      '/user/activate',
+      container.resolve(USER_CONTROLLER).activateUser
+    )
+    server.get(
+      '/user/:id',
       this.authGuard,
       container.resolve(USER_CONTROLLER).getUserById
     )

@@ -3,23 +3,28 @@ import { StatusCodes } from 'http-status-codes'
 
 import UserManager from '../../../app/services/api/UserManager.interface'
 import BaseController from './BaseController'
-import { UserSchema } from '../schema/UserSchema'
-import { LoginSchema } from '../schema/AuthSchema'
+import {
+  UserSchema,
+  LoginSchema,
+  ActivateAccountSchema
+} from '../schema/UserSchema'
 
 export default class UserController extends BaseController {
   constructor(private readonly userManager: UserManager) {
     super()
 
     this.getAllUsers = this.getAllUsers.bind(this)
-    this.createANewUser = this.createANewUser.bind(this)
+    this.registerUser = this.registerUser.bind(this)
     this.getCurrentUser = this.getCurrentUser.bind(this)
     this.getUserById = this.getUserById.bind(this)
     this.login = this.login.bind(this)
+    this.activateUser = this.activateUser.bind(this)
   }
 
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await this.userManager.getAllUsers()
+
       return res
         .status(StatusCodes.OK)
         .json({ success: true, data: result.value() })
@@ -29,10 +34,10 @@ export default class UserController extends BaseController {
     }
   }
 
-  async createANewUser(req: Request, res: Response, next: NextFunction) {
+  async registerUser(req: Request, res: Response, next: NextFunction) {
     try {
       const schema = UserSchema.parse(req.body)
-      const result = await this.userManager.createANewUser(schema)
+      const result = await this.userManager.registerUser(schema)
 
       if (result.isFail()) {
         return res.status(StatusCodes.BAD_REQUEST).json({
@@ -53,7 +58,6 @@ export default class UserController extends BaseController {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const schema = LoginSchema.parse(req.body)
-
       const result = await this.userManager.login(schema)
 
       if (result.isFail()) {
@@ -75,10 +79,9 @@ export default class UserController extends BaseController {
   }
 
   async getUserById(req: Request, res: Response, next: NextFunction) {
-    const { userId } = req.params
-
     try {
-      const result = await this.userManager.getUserById(userId)
+      const { id } = req.params
+      const result = await this.userManager.getUserById(id)
 
       if (result.isFail()) {
         return res
@@ -89,6 +92,25 @@ export default class UserController extends BaseController {
       return res
         .status(StatusCodes.OK)
         .json({ success: true, data: result.value() })
+    } catch (error) {
+      return this.handleError(error, res, next)
+    }
+  }
+
+  async activateUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const schema = ActivateAccountSchema.parse(req.query)
+      const result = await this.userManager.activateAccount(schema)
+
+      if (result.isFail()) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ success: false, message: result.error() })
+      }
+
+      return res
+        .status(StatusCodes.OK)
+        .json({ success: true, message: result.value() })
     } catch (error) {
       return this.handleError(error, res, next)
     }

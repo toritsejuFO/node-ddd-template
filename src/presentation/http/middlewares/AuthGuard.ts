@@ -35,6 +35,7 @@ export default (
 
     try {
       const user = await userRepository.findOneByIdAndEmail(id, email)
+      if (!user) throw new Error()
       req.user = toDtoAdapter.build(user).value()
     } catch (error) {
       return res.status(StatusCodes.FORBIDDEN).send({

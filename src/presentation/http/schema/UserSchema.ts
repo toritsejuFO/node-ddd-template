@@ -6,3 +6,12 @@ export const UserSchema = z.object({
   email: z.string().email(),
   password: z.string()
 })
+
+export const LoginSchema = z.object({
+  email: z.string().email(),
+  password: z.string()
+})
+
+export const ActivateAccountSchema = z.object({
+  token: z.string()
+})
