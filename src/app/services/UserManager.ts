@@ -47,7 +47,7 @@ export default class implements UserManager {
     user = await this.userRepository.save(user)
 
     const retUserDto = this.toDtoAdapter.build(user).value()
-    const activationToken = this.jwtService.encode(user.tokenizablePayload())
+    const activationToken = this.jwtService.encode(user.activateTokenPayload())
     this.eventPublisher.publishEvent(
       new NewUserCreatedEvent({ ...retUserDto, activationToken })
     )
@@ -67,7 +67,11 @@ export default class implements UserManager {
       return Result.fail('Invalid email or password')
     }
 
-    const authToken = this.jwtService.encode(user.tokenizablePayload())
+    if (!user.isActive()) {
+      return Result.fail('Account not activated')
+    }
+
+    const authToken = this.jwtService.encode(user.loginTokenPayload())
     return Result.Ok(authToken)
   }
 
@@ -81,10 +85,10 @@ export default class implements UserManager {
     activateAccountDto: ActivateAccountDto
   ): Promise<Result<string>> {
     const { token } = activateAccountDto
-    const { email, id } = this.jwtService.verify(token)
+    const { email, id, activate } = this.jwtService.verify(token)
 
     const user = await this.userRepository.findOneByIdAndEmail(id, email)
-    if (!user) return Result.fail('Invalid token received')
+    if (!user || !activate) return Result.fail('Invalid token received')
 
     if (!user.isActive()) {
       user.activate()

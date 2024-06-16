@@ -14,7 +14,7 @@ export default (
   ) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const token = req.get('X-Auth-Token')
-    let email, id
+    let email, id, user
 
     if (!token) {
       return res
@@ -34,10 +34,17 @@ export default (
     }
 
     try {
-      const user = await userRepository.findOneByIdAndEmail(id, email)
+      user = await userRepository.findOneByIdAndEmail(id, email)
       if (!user) throw new Error()
       req.user = toDtoAdapter.build(user).value()
     } catch (error) {
+      return res.status(StatusCodes.FORBIDDEN).send({
+        success: false,
+        message: 'Unauthorized user'
+      })
+    }
+
+    if (!user.isActive()) {
       return res.status(StatusCodes.FORBIDDEN).send({
         success: false,
         message: 'Unauthorized user'

@@ -1,25 +1,27 @@
 'use strict'
 
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
+import { DataTypes, QueryInterface, Sequelize } from 'sequelize'
+
+export default {
+  up: async (queryInterface: QueryInterface) => {
     await queryInterface.changeColumn('users', 'userId', {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true
     })
     await queryInterface.addColumn('users', 'isEmailVerified', {
-      type: Sequelize.BOOLEAN,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false
     })
     await queryInterface.addColumn('users', 'isActive', {
-      type: Sequelize.BOOLEAN,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false
     })
   },
 
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface: QueryInterface) => {
     await queryInterface.removeColumn('users', 'isEmailVerified')
     await queryInterface.removeColumn('users', 'isActive')
   }

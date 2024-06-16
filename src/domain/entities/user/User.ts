@@ -21,8 +21,16 @@ export default class User extends Entity<UserProps> {
     return Result.Ok(new User(userProps))
   }
 
-  tokenizablePayload() {
+  loginTokenPayload() {
     return { email: this.props.email, id: this.props.id?.value() }
+  }
+
+  activateTokenPayload() {
+    return {
+      email: this.props.email,
+      id: this.props.id?.value(),
+      activate: true
+    }
   }
 
   activate() {
