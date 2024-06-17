@@ -1,11 +1,11 @@
 import express, { Express } from 'express'
 import { AwilixContainer } from 'awilix'
 
-import { Database } from './infra/database'
-import { Config } from './infra/config'
-import { Logger } from './shared/logger'
-import EventHandler from './app/eventhandlers/EventHandler.interface'
-import EventPublisher from './domain/events/EventPublisher.interface'
+import { Database } from '@infra/database'
+import { Config } from '@infra/config'
+import { Logger } from '@shared/logger'
+import EventHandler from '@app/eventhandlers/EventHandler.interface'
+import EventPublisher from '@domain/events/EventPublisher.interface'
 
 export interface App {
   server: Express

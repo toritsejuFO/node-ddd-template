@@ -1,8 +1,9 @@
-import Event, { NEW_USER_CREATED } from '../../domain/events/Event.interface'
-import { Logger } from '../../shared/logger'
-import { UserDto } from '../dtos/UserDto'
-import MailService, { MailParams } from '../services/api/MailService.interface'
-import EventHandler from './EventHandler.interface'
+import Event, { NEW_USER_CREATED } from '@domain/events/Event.interface'
+import { Logger } from '@shared/logger'
+import MailService, {
+  MailParams
+} from '@app/services/api/MailService.interface'
+import EventHandler from '@app/eventhandlers/EventHandler.interface'
 
 export default class NewUserCreatedHandler implements EventHandler {
   private readonly eventName = NEW_USER_CREATED

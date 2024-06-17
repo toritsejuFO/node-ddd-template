@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
 
-import UserManager from '../../../app/services/api/UserManager.interface'
-import BaseController from './BaseController'
+import UserManager from '@app/services/api/UserManager.interface'
+import BaseController from '@presentation/http/controllers/BaseController'
 import {
   UserSchema,
   LoginSchema,
   ActivateAccountSchema
-} from '../schema/UserSchema'
+} from '@presentation/http/schema/UserSchema'
 
 export default class UserController extends BaseController {
   constructor(private readonly userManager: UserManager) {

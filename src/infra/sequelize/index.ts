@@ -3,7 +3,7 @@ import path from 'path'
 
 import { Dialect, Sequelize } from 'sequelize'
 
-import { Config } from '../config'
+import { Config } from '@infra/config'
 
 const MODELS_PATH = path.resolve(__dirname, 'models')
 

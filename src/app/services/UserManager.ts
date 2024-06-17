@@ -1,19 +1,19 @@
 import { IAdapter, Result } from 'types-ddd'
 
-import UserRepository from '../../domain/repositories/UserRepository.interface'
-import User from '../../domain/entities/user/User'
-import UserManager from './api/UserManager.interface'
-import NewUserCreatedEvent from '../../domain/events/NewUserCreatedEvent'
-import UserService from '../../domain/services/api/UserService.interface'
-import EncryptionService from './api/EncryptionService.interface'
-import EventPublisher from '../../domain/events/EventPublisher.interface'
+import UserRepository from '@domain/repositories/UserRepository.interface'
+import User from '@domain/entities/user/User'
+import UserManager from '@app/services/api/UserManager.interface'
+import NewUserCreatedEvent from '@domain/events/NewUserCreatedEvent'
+import UserService from '@domain/services/api/UserService.interface'
+import EncryptionService from '@app/services/api/EncryptionService.interface'
+import EventPublisher from '@domain/events/EventPublisher.interface'
 import {
   UserDtoCreate,
   UserDto,
   LoginDto,
   ActivateAccountDto
-} from '../dtos/UserDto'
-import JwtService from './api/JwtService.interface'
+} from '@app/dtos/UserDto'
+import JwtService from '@app/services/api/JwtService.interface'
 
 export default class implements UserManager {
   constructor(

@@ -1,5 +1,5 @@
-import container from './Container'
-import { App } from './App'
+import container from '@/container'
+import { App } from '@/App'
 
 const app: App = container.resolve('app')
 

@@ -1,7 +1,8 @@
 import { Sequelize } from 'sequelize'
-import { Config } from '../config'
-import { Logger } from '../../shared/logger'
-import sequelize from '../sequelize'
+
+import { Config } from '@infra/config'
+import { Logger } from '@shared/logger'
+import sequelize from '@infra/sequelize'
 
 export interface Database {
   connection: Sequelize

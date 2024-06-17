@@ -1,5 +1,5 @@
-import BaseError from './BaseError'
-import DatabaseError from './DatabaseError'
+import BaseError from '@BaseError'
+import DatabaseError from '@DatabaseError'
 
 declare type CustomErrorType = BaseError | DatabaseError
 

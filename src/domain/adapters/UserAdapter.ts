@@ -1,8 +1,8 @@
 import { IAdapter, ID, Result } from 'types-ddd'
 
-import User from '../entities/user/User'
-import { UserModel } from '../repositories/UserRepository.interface'
-import { UserDto } from '../../app/dtos/UserDto'
+import User from '@domain/entities/user/User'
+import { UserModel } from '@domain/repositories/UserRepository.interface'
+import { UserDto } from '@app/dtos/UserDto'
 
 export class ToDomainAdapter implements IAdapter<UserModel, User> {
   build(userModel: UserModel): Result<User> {

@@ -4,7 +4,7 @@ import {
   LoginSchema,
   UserSchema,
   ActivateAccountSchema
-} from '../../presentation/http/schema/UserSchema'
+} from '@presentation/http/schema/UserSchema'
 
 export type UserDto = z.infer<typeof UserSchema> & {
   id: string

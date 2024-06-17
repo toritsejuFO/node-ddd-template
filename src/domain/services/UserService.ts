@@ -1,9 +1,9 @@
 import { ID, Result } from 'types-ddd'
 
-import UserRepository from '../repositories/UserRepository.interface'
-import User from '../entities/user/User'
-import UserService from './api/UserService.interface'
-import { UserDtoCreate } from '../../app/dtos/UserDto'
+import UserRepository from '@domain/repositories/UserRepository.interface'
+import User from '@domain/entities/user/User'
+import UserService from '@domain/services/api/UserService.interface'
+import { UserDtoCreate } from '@app/dtos/UserDto'
 
 export default class implements UserService {
   constructor(private readonly userRepository: UserRepository) {}

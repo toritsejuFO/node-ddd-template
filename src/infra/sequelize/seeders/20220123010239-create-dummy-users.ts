@@ -3,7 +3,7 @@
 import faker from '@faker-js/faker'
 import { QueryInterface } from 'sequelize'
 
-import EncryptionService from '../../encryption'
+import EncryptionService from '@encryption'
 
 export async function up(queryInterface: QueryInterface) {
   const users = []

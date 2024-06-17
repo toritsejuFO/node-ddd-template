@@ -1,12 +1,12 @@
 import { IAdapter } from 'types-ddd'
 
-import DatabaseError from '../../../shared/errors/DatabaseError'
-import Database from '../../database'
-import { Logger } from '../../../shared/logger'
+import DatabaseError from '@shared/errors/DatabaseError'
+import Database from '@infra/database'
+import { Logger } from '@shared/logger'
 import UserRepository, {
   UserModel
-} from '../../../domain/repositories/UserRepository.interface'
-import User from '../../../domain/entities/user/User'
+} from '@domain/repositories/UserRepository.interface'
+import User from '@domain/entities/user/User'
 
 export default class implements UserRepository {
   private readonly user: any

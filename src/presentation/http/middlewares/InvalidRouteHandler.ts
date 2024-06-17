@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { Logger } from '../../../shared/logger'
+import { Logger } from '@shared/logger'
 
 export default (logger: Logger) =>
   (req: Request, res: Response, next: NextFunction) => {

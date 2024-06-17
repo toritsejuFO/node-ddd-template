@@ -1,4 +1,4 @@
-import Event from '../../domain/events/Event.interface'
+import Event from '@domain/events/Event.interface'
 
 export default interface EventHandler {
   getEventName(): string
