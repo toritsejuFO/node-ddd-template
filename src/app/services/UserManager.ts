@@ -81,13 +81,16 @@ export default class implements UserManager {
     const { email, id, activate } = this.jwtService.verify(token)
 
     const user = await this.userRepository.findOneByIdAndEmail(id, email)
-    if (!user || !activate) return Result.fail('Invalid token received')
-
-    if (!user.isActive()) {
-      user.activate()
-      await this.userRepository.save(user)
+    if (!(user && activate)) {
+      return Result.fail('Invalid token received')
     }
 
-    return Result.Ok('Account activated successfully')
+    if (user.isActive()) {
+      return Result.Ok('User account is already active')
+    }
+
+    user.activate()
+    await this.userRepository.save(user)
+    return Result.Ok('User account activated successfully')
   }
 }
