@@ -4,7 +4,7 @@ import {
   UserDto,
   LoginDto,
   ActivateAccountDto
-} from '@dtos/UserDto'
+} from '@app/dtos/UserDto'
 
 export default interface UserManager {
   getAllUsers(): Promise<Result<UserDto[]>>
