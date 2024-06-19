@@ -2,17 +2,21 @@ import { z } from 'zod'
 
 import {
   LoginSchema,
-  UserSchema,
+  NewUserSchema,
   ActivateAccountSchema
 } from '@presentation/http/schema/UserSchema'
 
-export type UserDto = z.infer<typeof UserSchema> & {
+export type NewUserDto = z.infer<typeof NewUserSchema>
+
+type NonCreationFields = {
   id: string
+  isEmailVerified: boolean
+  isActive: boolean
   createdAt: Date
   updatedAt: Date
 }
 
-export type UserDtoCreate = Omit<UserDto, 'id' | 'createdAt' | 'updatedAt'>
+export type UserDto = z.mergeTypes<NewUserDto, NonCreationFields>
 
 export type LoginDto = z.infer<typeof LoginSchema>
 

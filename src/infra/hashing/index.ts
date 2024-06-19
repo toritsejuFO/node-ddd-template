@@ -1,10 +1,10 @@
 import { hashSync, compareSync } from 'bcrypt'
-import EncryptionService from '@app/services/api/EncryptionService.interface'
+import HashService from '@app/services/api/HashService.interface'
 
-export default class implements EncryptionService {
+export default class implements HashService {
   private readonly SALT = 10
 
-  encrypt(value: string) {
+  hash(value: string) {
     return hashSync(value, this.SALT)
   }
 

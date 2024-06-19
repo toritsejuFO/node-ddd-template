@@ -4,10 +4,11 @@
   "description": "Node template for building apps using DDD",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec node -r ts-node/register -r tsconfig-paths/register --env-file=.env src/index.ts",
-    "build": "rimraf build && tsc",
-    "start": "node --env-file=.env build/index.js",
+    "test": "glob tests/**/*.test.ts -c 'tsx --test'",
+    "devv": "nodemon --exec tsx --env-file=.env src/index.ts",
+    "dev": "tsx --env-file=.env --watch src/index.ts",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "start": "tsx --env-file=.env dist/index.js",
     "serve": "npm run build && npm run start",
     "sq": "sequelize-cli",
     "lint": "eslint --ignore-path .gitignore --ext .ts",
@@ -48,11 +49,11 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
+    "glob": "^10.4.2",
     "nodemon": "^2.0.15",
     "rimraf": "^5.0.7",
     "sequelize-cli": "^6.3.0",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.15.6",
     "typescript": "^5.4.5"
   }
 }

@@ -1,6 +1,6 @@
 import { Result } from 'types-ddd'
 import {
-  UserDtoCreate,
+  NewUserDto,
   UserDto,
   LoginDto,
   ActivateAccountDto
@@ -8,7 +8,7 @@ import {
 
 export default interface UserManager {
   getAllUsers(): Promise<Result<UserDto[]>>
-  registerUser(userDto: UserDtoCreate): Promise<Result<UserDto | void>>
+  registerUser(userDto: NewUserDto): Promise<Result<UserDto | void>>
   login(loginDto: LoginDto): Promise<Result<string | void>>
   getUserById(id: string): Promise<Result<UserDto | void>>
   activateAccount(

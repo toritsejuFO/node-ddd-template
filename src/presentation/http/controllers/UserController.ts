@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes'
 import UserManager from '@app/services/api/UserManager.interface'
 import BaseController from '@presentation/http/controllers/BaseController'
 import {
-  UserSchema,
+  NewUserSchema,
   LoginSchema,
   ActivateAccountSchema
 } from '@presentation/http/schema/UserSchema'
@@ -36,7 +36,7 @@ export default class UserController extends BaseController {
 
   async registerUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const schema = UserSchema.parse(req.body)
+      const schema = NewUserSchema.parse(req.body)
       const result = await this.userManager.registerUser(schema)
 
       if (result.isFail()) {

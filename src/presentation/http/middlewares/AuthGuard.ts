@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
 
-import UserRepository from '@domain/repositories/UserRepository.interface'
-import JwtService from '@app/services/api/JwtService.interface'
+import UserRepository from '@/app/repositories/UserRepository.interface'
+import JwtService from '@/app/services/api/JwtService.interface'
 import { IAdapter } from 'types-ddd'
 import User from '@domain/entities/user/User'
 import { UserDto } from '@app/dtos/UserDto'

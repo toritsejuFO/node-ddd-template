@@ -21,13 +21,12 @@ import {
   ToDomainAdapter,
   ToPersistenceAdapter
 } from '@domain/adapters/UserAdapter'
-import UserService from '@domain/services/UserService'
 
 // Infra
 import Config from '@infra/config'
 import Database from '@infra/database'
 import Logger from '@shared/logger'
-import Encryption from '@infra/encryption'
+import HashService from '@/infra/hashing'
 import NodeMailer from '@infra/mail/NodeMailer'
 import JWT from '@infra/jwt'
 import EventPublisher from '@infra/events/EventPublisher'
@@ -61,13 +60,12 @@ container.register({
   toDtoAdapter: asClass(ToDtoAdapter).singleton(),
   toDomainAdapter: asClass(ToDomainAdapter).singleton(),
   toPersistenceAdapter: asClass(ToPersistenceAdapter).singleton(),
-  userService: asClass(UserService).singleton(),
 
   // Infra
   config: asValue(Config),
   database: asClass(Database).singleton(),
   logger: asFunction(Logger).singleton(),
-  encryptionService: asClass(Encryption).singleton(),
+  hashService: asClass(HashService).singleton(),
   mailService: asClass(NodeMailer).singleton(),
   jwtService: asClass(JWT).singleton(),
   eventPublisher: asClass(EventPublisher).singleton(),

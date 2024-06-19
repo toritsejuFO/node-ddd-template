@@ -3,7 +3,7 @@
 import faker from '@faker-js/faker'
 import { QueryInterface } from 'sequelize'
 
-import EncryptionService from '@infra/encryption'
+import HashService from '@/infra/hashing'
 
 export async function up(queryInterface: QueryInterface) {
   const users = []
@@ -19,7 +19,7 @@ export async function up(queryInterface: QueryInterface) {
       isEmailVerified: activated,
       isActive: activated,
       email: faker.internet.email(firstname, lastname),
-      password: new EncryptionService().encrypt(`${firstname}123`)
+      password: new HashService().encrypt(`${firstname}123`)
     })
   }
   await queryInterface.bulkInsert('users', users, {})
