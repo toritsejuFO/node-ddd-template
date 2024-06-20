@@ -27,8 +27,7 @@ export default class NewUserCreatedHandler implements EventHandler {
     const userObject = user.toObject()
 
     this.logger.info(
-      `Event::${event.getName()} - EventHandler::${this.constructor.name} -`,
-      user
+      `Event::${event.getName()} - EventHandler::${this.constructor.name}`
     )
 
     const activationToken = this.jwtService.encode(

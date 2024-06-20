@@ -4,9 +4,8 @@
   "description": "Node template for building apps using DDD",
   "main": "index.js",
   "scripts": {
-    "test": "glob tests/**/*.test.ts -c 'tsx --test'",
-    "devv": "nodemon --exec tsx --env-file=.env src/index.ts",
-    "dev": "tsx --env-file=.env --watch src/index.ts",
+    "test": "tsx --env-file=.env.test --test $(glob tests/**/*.test.ts)",
+    "dev": "nodemon --exec tsx --env-file=.env src/index.ts",
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "start": "tsx --env-file=.env dist/index.js",
     "serve": "npm run build && npm run start",
@@ -44,6 +43,7 @@
     "@types/node": "^20.14.2",
     "@types/nodemailer": "^6.4.15",
     "@types/pg": "^8.11.6",
+    "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
     "@typescript-eslint/parser": "^7.13.0",
     "eslint": "^8.57.0",
@@ -53,6 +53,8 @@
     "nodemon": "^2.0.15",
     "rimraf": "^5.0.7",
     "sequelize-cli": "^6.3.0",
+    "sqlite3": "^5.1.7",
+    "supertest": "^7.0.0",
     "tsx": "^4.15.6",
     "typescript": "^5.4.5"
   }

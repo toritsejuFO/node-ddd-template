@@ -8,6 +8,7 @@ export interface Database {
   connection: Sequelize
 
   connect(): void
+  disconnect(): void
 }
 
 export default class implements Database {
@@ -19,6 +20,7 @@ export default class implements Database {
   ) {
     if (config.db) {
       this.connection = sequelize(this.config)
+      this.connection.sync()
     } else {
       this.logger.error('DB_ERROR, missing config. Exiting.')
       process.exit(1)
@@ -27,5 +29,9 @@ export default class implements Database {
 
   async connect() {
     this.connection.authenticate()
+  }
+
+  async disconnect() {
+    this.connection.close()
   }
 }

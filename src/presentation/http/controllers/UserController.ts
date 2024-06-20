@@ -24,10 +24,7 @@ export default class UserController extends BaseController {
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await this.userManager.getAllUsers()
-
-      return res
-        .status(StatusCodes.OK)
-        .json({ success: true, data: result.value() })
+      return res.status(StatusCodes.OK).json(this.success(result))
     } catch (error) {
       console.log('ERROR', error)
       return this.handleError(error, res, next)
@@ -40,16 +37,12 @@ export default class UserController extends BaseController {
       const result = await this.userManager.registerUser(schema)
 
       if (result.isFail()) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
-          success: false,
-          message: result.error(),
-          error: result.metaData()
-        })
+        return res
+          .status(this.evaluateStatusCode(result))
+          .json(this.fail(result))
       }
 
-      return res
-        .status(StatusCodes.CREATED)
-        .json({ success: true, data: result.value() })
+      return res.status(StatusCodes.CREATED).json(this.success(result))
     } catch (error) {
       return this.handleError(error, res, next)
     }
@@ -61,21 +54,18 @@ export default class UserController extends BaseController {
       const result = await this.userManager.login(schema)
 
       if (result.isFail()) {
-        return res
-          .status(StatusCodes.UNAUTHORIZED)
-          .json({ success: false, message: result.error() })
+        return res.status(StatusCodes.UNAUTHORIZED).json(this.fail(result))
       }
 
-      return res
-        .status(StatusCodes.OK)
-        .send({ success: true, data: { token: result.value() } })
+      return res.status(StatusCodes.OK).send(this.success(result))
     } catch (error) {
       return this.handleError(error, res, next)
     }
   }
 
-  getCurrentUser(req: Request, res: Response, next: NextFunction) {
-    return res.status(StatusCodes.OK).send({ success: true, data: req.user })
+  async getCurrentUser(req: Request, res: Response, next: NextFunction) {
+    const result = await this.userManager.getCurrentUser(req.user)
+    return res.status(StatusCodes.OK).send(this.success(result))
   }
 
   async getUserById(req: Request, res: Response, next: NextFunction) {
@@ -84,14 +74,10 @@ export default class UserController extends BaseController {
       const result = await this.userManager.getUserById(id)
 
       if (result.isFail()) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ success: false, message: result.error() })
+        return res.status(StatusCodes.NOT_FOUND).json(this.fail(result))
       }
 
-      return res
-        .status(StatusCodes.OK)
-        .json({ success: true, data: result.value() })
+      return res.status(StatusCodes.OK).json(this.success(result))
     } catch (error) {
       return this.handleError(error, res, next)
     }
@@ -103,14 +89,10 @@ export default class UserController extends BaseController {
       const result = await this.userManager.activateAccount(schema)
 
       if (result.isFail()) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ success: false, message: result.error() })
+        return res.status(StatusCodes.BAD_REQUEST).json(this.fail(result))
       }
 
-      return res
-        .status(StatusCodes.OK)
-        .json({ success: true, message: result.value() })
+      return res.status(StatusCodes.OK).json(this.success(result))
     } catch (error) {
       return this.handleError(error, res, next)
     }

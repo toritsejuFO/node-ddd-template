@@ -6,6 +6,7 @@ import { Logger } from '@shared/logger'
 export default (logger: Logger) =>
   (error: Error, req: Request, res: Response, next: NextFunction) => {
     logger.error(error)
+
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: 'Internal Server Error',

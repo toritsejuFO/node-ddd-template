@@ -3,15 +3,8 @@ import { StatusCodes } from 'http-status-codes'
 
 import UserRepository from '@/app/repositories/UserRepository.interface'
 import JwtService from '@/app/services/api/JwtService.interface'
-import { IAdapter } from 'types-ddd'
-import User from '@domain/entities/user/User'
-import { UserDto } from '@app/dtos/UserDto'
 
-export default (
-    jwtService: JwtService,
-    userRepository: UserRepository,
-    toDtoAdapter: IAdapter<User, UserDto>
-  ) =>
+export default (jwtService: JwtService, userRepository: UserRepository) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const token = req.get('X-Auth-Token')
     let email, id, user
@@ -36,7 +29,7 @@ export default (
     try {
       user = await userRepository.findOneByIdAndEmail(id, email)
       if (!user) throw new Error()
-      req.user = toDtoAdapter.build(user).value()
+      req.user = user
     } catch (error) {
       return res.status(StatusCodes.FORBIDDEN).send({
         success: false,

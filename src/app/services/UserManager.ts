@@ -13,6 +13,14 @@ import {
   ActivateAccountDto
 } from '@app/dtos/UserDto'
 import JwtService from '@/app/services/api/JwtService.interface'
+import {
+  INVALID_LOGIN,
+  INVALID_TOKEN,
+  USER_ACTIVATED,
+  USER_ALREADY_ACTIVATED,
+  USER_ALREADY_EXISTS,
+  USER_NOT_FOUND
+} from '@/app/messaging/UserMessage'
 
 export default class implements UserManager {
   constructor(
@@ -33,7 +41,9 @@ export default class implements UserManager {
 
   async registerUser(userDto: NewUserDto) {
     if (await this.userRepository.existsByEmail(userDto.email)) {
-      return Result.fail('User already exists')
+      return Result.fail(USER_ALREADY_EXISTS.message, {
+        code: USER_ALREADY_EXISTS.code
+      })
     }
 
     const result = User.create(userDto)
@@ -56,7 +66,7 @@ export default class implements UserManager {
 
     const user = await this.userRepository.findOneByEmail(email)
     if (!(user && this.hashService.compare(password, user.get('password')))) {
-      return Result.fail('Invalid email or password')
+      return Result.fail(INVALID_LOGIN.message, { code: INVALID_LOGIN.code })
     }
 
     const result = user.login()
@@ -65,12 +75,17 @@ export default class implements UserManager {
     }
 
     const authToken = this.jwtService.encode(user.getLoginTokenPayload())
-    return Result.Ok(authToken)
+    return Result.Ok({ token: authToken })
+  }
+
+  async getCurrentUser(user: User) {
+    return Result.Ok(this.toDtoAdapter.build(user).value())
   }
 
   async getUserById(id: string) {
     const user = await this.userRepository.findOneById(id)
-    if (!user) return Result.fail('User not found')
+    if (!user)
+      return Result.fail(USER_NOT_FOUND.message, { code: USER_NOT_FOUND.code })
     return Result.Ok(this.toDtoAdapter.build(user).value())
   }
 
@@ -82,15 +97,19 @@ export default class implements UserManager {
 
     const user = await this.userRepository.findOneByIdAndEmail(id, email)
     if (!(user && activate)) {
-      return Result.fail('Invalid token received')
+      return Result.fail(INVALID_TOKEN.message, {
+        code: INVALID_TOKEN.code
+      })
     }
 
     if (user.isActive()) {
-      return Result.Ok('User account is already active')
+      return Result.Ok(USER_ALREADY_ACTIVATED.message, {
+        code: USER_ALREADY_ACTIVATED.code
+      })
     }
 
     user.activate()
     await this.userRepository.save(user)
-    return Result.Ok('User account activated successfully')
+    return Result.Ok(USER_ACTIVATED.message, { code: USER_ACTIVATED.code })
   }
 }

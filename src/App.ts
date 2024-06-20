@@ -1,4 +1,6 @@
-import express, { Express } from 'express'
+import { Server } from 'node:http'
+
+import express, { Application } from 'express'
 import { AwilixContainer } from 'awilix'
 
 import { Database } from '@infra/database'
@@ -8,14 +10,16 @@ import EventHandler from '@app/eventhandlers/EventHandler.interface'
 import EventPublisher from '@domain/events/EventPublisher.interface'
 
 export interface App {
-  server: Express
+  app: Application
 
   start(container: AwilixContainer): Promise<void>
+  stop(): void
   getLogger(): Logger
 }
 
 export default class implements App {
-  readonly server: Express
+  readonly app: Application
+  server!: Server
 
   constructor(
     private readonly config: Config,
@@ -24,27 +28,32 @@ export default class implements App {
     private readonly eventPublisher: EventPublisher,
     private readonly eventHandlers: EventHandler[]
   ) {
-    this.server = express()
+    this.app = express()
     this.database.connect()
   }
 
   async start(container: AwilixContainer) {
-    this.server.disable('x-powered-by')
-    this.server.use(express.json())
+    this.app.disable('x-powered-by')
+    this.app.use(express.json())
 
     // Setup all routes
-    container.resolve('router').setupRoutes(this.server, container)
+    container.resolve('router').setupRoutes(this.app, container)
 
     // Register all eventhandlers
     this.eventHandlers.map((h: EventHandler) =>
       this.eventPublisher.registerHandler(h)
     )
 
-    // Start the server
+    // Start the app
     const { port } = this.config.app
-    this.server.listen(port, () => {
+    this.server = this.app.listen(port, () => {
       this.logger.info('Server is listening on port %s', port)
     })
+  }
+
+  async stop() {
+    this.server.close()
+    this.database.disconnect()
   }
 
   getLogger() {
