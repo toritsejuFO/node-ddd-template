@@ -6,7 +6,8 @@
   "scripts": {
     "test": "tsx --env-file=.env.test --test $(glob tests/**/*.test.ts)",
     "dev": "nodemon --exec tsx --env-file=.env src/index.ts",
-    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc -p tsconfig.build.json",
     "start": "tsx --env-file=.env dist/index.js",
     "serve": "npm run build && npm run start",
     "sq": "sequelize-cli",

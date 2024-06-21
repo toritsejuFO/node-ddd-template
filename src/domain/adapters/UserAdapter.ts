@@ -51,8 +51,8 @@ export class ToDtoAdapter implements IAdapter<User, Omit<UserDto, 'password'>> {
       firstname: userObject.firstname,
       lastname: userObject.lastname,
       email: userObject.email,
-      isEmailVerified: userObject.isEmailVerified,
-      isActive: userObject.isActive,
+      isEmailVerified: Boolean(userObject.isEmailVerified).valueOf(),
+      isActive: Boolean(userObject.isActive).valueOf(),
       createdAt: userObject.createdAt,
       updatedAt: userObject.updatedAt
     }
