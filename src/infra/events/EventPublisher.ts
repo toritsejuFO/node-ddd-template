@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events'
 
-import EventPublisher from '../../domain/events/EventPublisher.interface'
-import Event from '../../domain/events/Event.interface'
-import EventHandler from '../../app/eventhandlers/EventHandler.interface'
+import EventPublisher from '@domain/events/EventPublisher.interface'
+import Event from '@domain/events/Event.interface'
+import EventHandler from '@app/eventhandlers/EventHandler.interface'
 
 export default class extends EventEmitter implements EventPublisher {
   constructor() {

@@ -1,6 +1,6 @@
 import { Entity, Result, UID } from 'types-ddd'
 
-interface UserProps {
+export interface UserProps {
   id?: UID
   firstname: string
   lastname: string
@@ -21,14 +21,14 @@ export default class User extends Entity<UserProps> {
     return Result.Ok(new User(userProps))
   }
 
-  loginTokenPayload() {
-    return { email: this.props.email, id: this.props.id?.value() }
+  getLoginTokenPayload() {
+    return { email: this.props.email, id: this.id.value() }
   }
 
-  activateTokenPayload() {
+  getActivateTokenPayload() {
     return {
       email: this.props.email,
-      id: this.props.id?.value(),
+      id: this.id?.value(),
       activate: true
     }
   }
@@ -42,5 +42,12 @@ export default class User extends Entity<UserProps> {
 
   isActive() {
     return this.props.isActive
+  }
+
+  login() {
+    if (!this.isActive()) {
+      return Result.fail('Account not active')
+    }
+    return Result.Ok()
   }
 }

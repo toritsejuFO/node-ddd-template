@@ -1,56 +1,63 @@
 import { IAdapter, Result } from 'types-ddd'
 
-import UserRepository from '../../domain/repositories/UserRepository.interface'
-import User from '../../domain/entities/user/User'
-import UserManager from './api/UserManager.interface'
-import NewUserCreatedEvent from '../../domain/events/NewUserCreatedEvent'
-import UserService from '../../domain/services/api/UserService.interface'
-import EncryptionService from './api/EncryptionService.interface'
-import EventPublisher from '../../domain/events/EventPublisher.interface'
+import UserRepository from '@/app/repositories/UserRepository.interface'
+import User from '@domain/entities/user/User'
+import UserManager from '@app/services/api/UserManager.interface'
+import NewUserCreatedEvent from '@domain/events/NewUserCreatedEvent'
+import HashService from '@app/services/api/HashService.interface'
+import EventPublisher from '@domain/events/EventPublisher.interface'
 import {
-  UserDtoCreate,
+  NewUserDto,
   UserDto,
   LoginDto,
   ActivateAccountDto
-} from '../dtos/UserDto'
-import JwtService from './api/JwtService.interface'
+} from '@app/dtos/UserDto'
+import JwtService from '@/app/services/api/JwtService.interface'
+import {
+  INVALID_LOGIN,
+  INVALID_TOKEN,
+  USER_ACTIVATED,
+  USER_ALREADY_ACTIVATED,
+  USER_ALREADY_EXISTS,
+  USER_NOT_FOUND
+} from '@/app/messaging/UserMessage'
 
 export default class implements UserManager {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly eventPublisher: EventPublisher,
-    private readonly encryptionService: EncryptionService,
-    private readonly userService: UserService,
+    private readonly hashService: HashService,
     private readonly toDtoAdapter: IAdapter<User, UserDto>,
     private readonly jwtService: JwtService
   ) {}
 
   async getAllUsers() {
     const users = await this.userRepository.findAll()
-    const userDtoList = users.map((user: User) =>
-      this.toDtoAdapter.build(user).value()
-    )
+    const userDtoList = users
+      .map(this.toDtoAdapter.build)
+      .map((result) => result.value())
     return Result.Ok(userDtoList)
   }
 
-  async registerUser(userDto: UserDtoCreate) {
-    const result = await this.userService.registerUser(userDto)
+  async registerUser(userDto: NewUserDto) {
+    if (await this.userRepository.existsByEmail(userDto.email)) {
+      return Result.fail(USER_ALREADY_EXISTS.message, {
+        code: USER_ALREADY_EXISTS.code
+      })
+    }
+
+    const result = User.create(userDto)
     if (result.isFail()) {
       return Result.fail(result.error(), result.metaData())
     }
 
-    let user: User = result.value()
-    user.change(
-      'password',
-      this.encryptionService.encrypt(user.get('password'))
-    )
-    user = await this.userRepository.save(user)
+    const user = result.value()
+    user.change('password', this.hashService.hash(user.get('password')))
+    const savedUser = await this.userRepository.save(user)
 
-    const retUserDto = this.toDtoAdapter.build(user).value()
-    const activationToken = this.jwtService.encode(user.activateTokenPayload())
-    this.eventPublisher.publishEvent(
-      new NewUserCreatedEvent({ ...retUserDto, activationToken })
-    )
+    this.eventPublisher.publishEvent(new NewUserCreatedEvent(savedUser))
+
+    const retUserDto = this.toDtoAdapter.build(savedUser).value()
     return Result.Ok(retUserDto)
   }
 
@@ -58,26 +65,27 @@ export default class implements UserManager {
     const { email, password } = loginDto
 
     const user = await this.userRepository.findOneByEmail(email)
-    if (!user) {
-      return Result.fail('Invalid email or password')
+    if (!(user && this.hashService.compare(password, user.get('password')))) {
+      return Result.fail(INVALID_LOGIN.message, { code: INVALID_LOGIN.code })
     }
 
-    const valid = this.encryptionService.compare(password, user.get('password'))
-    if (!valid) {
-      return Result.fail('Invalid email or password')
+    const result = user.login()
+    if (result.isFail()) {
+      return result
     }
 
-    if (!user.isActive()) {
-      return Result.fail('Account not activated')
-    }
+    const authToken = this.jwtService.encode(user.getLoginTokenPayload())
+    return Result.Ok({ token: authToken })
+  }
 
-    const authToken = this.jwtService.encode(user.loginTokenPayload())
-    return Result.Ok(authToken)
+  async getCurrentUser(user: User) {
+    return Result.Ok(this.toDtoAdapter.build(user).value())
   }
 
   async getUserById(id: string) {
     const user = await this.userRepository.findOneById(id)
-    if (!user) return Result.fail('User not found')
+    if (!user)
+      return Result.fail(USER_NOT_FOUND.message, { code: USER_NOT_FOUND.code })
     return Result.Ok(this.toDtoAdapter.build(user).value())
   }
 
@@ -88,13 +96,20 @@ export default class implements UserManager {
     const { email, id, activate } = this.jwtService.verify(token)
 
     const user = await this.userRepository.findOneByIdAndEmail(id, email)
-    if (!user || !activate) return Result.fail('Invalid token received')
-
-    if (!user.isActive()) {
-      user.activate()
-      await this.userRepository.save(user)
+    if (!(user && activate)) {
+      return Result.fail(INVALID_TOKEN.message, {
+        code: INVALID_TOKEN.code
+      })
     }
 
-    return Result.Ok('Account activated successfully')
+    if (user.isActive()) {
+      return Result.Ok(USER_ALREADY_ACTIVATED.message, {
+        code: USER_ALREADY_ACTIVATED.code
+      })
+    }
+
+    user.activate()
+    await this.userRepository.save(user)
+    return Result.Ok(USER_ACTIVATED.message, { code: USER_ACTIVATED.code })
   }
 }

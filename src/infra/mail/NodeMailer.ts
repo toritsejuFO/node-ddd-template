@@ -1,11 +1,11 @@
 import { Transporter, createTransport } from 'nodemailer'
 
-import { Config } from '../config'
-import { Logger } from '../../shared/logger'
-import getTemplate from './GetTemplate'
+import { Config } from '@infra/config'
+import { Logger } from '@shared/logger'
+import getTemplate from '@infra/mail/getTemplate'
 import MailService, {
   MailParams
-} from '../../app/services/api/MailService.interface'
+} from '@app/services/api/MailService.interface'
 
 export default class implements MailService {
   private readonly transporter: Transporter

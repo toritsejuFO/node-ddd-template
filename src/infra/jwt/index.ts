@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 
-import { Config } from '../config'
-import JwtService from '../../app/services/api/JwtService.interface'
+import { Config } from '@infra/config'
+import JwtService from '@/app/services/api/JwtService.interface'
 
 export default class implements JwtService {
   constructor(private readonly config: Config) {}

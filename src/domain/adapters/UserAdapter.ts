@@ -1,8 +1,8 @@
 import { IAdapter, ID, Result } from 'types-ddd'
 
-import User from '../entities/user/User'
-import { UserModel } from '../repositories/UserRepository.interface'
-import { UserDto } from '../../app/dtos/UserDto'
+import User from '@domain/entities/user/User'
+import { UserModel } from '@/app/repositories/UserRepository.interface'
+import { UserDto } from '@app/dtos/UserDto'
 
 export class ToDomainAdapter implements IAdapter<UserModel, User> {
   build(userModel: UserModel): Result<User> {
@@ -51,8 +51,8 @@ export class ToDtoAdapter implements IAdapter<User, Omit<UserDto, 'password'>> {
       firstname: userObject.firstname,
       lastname: userObject.lastname,
       email: userObject.email,
-      isEmailVerified: userObject.isEmailVerified,
-      isActive: userObject.isActive,
+      isEmailVerified: Boolean(userObject.isEmailVerified).valueOf(),
+      isActive: Boolean(userObject.isActive).valueOf(),
       createdAt: userObject.createdAt,
       updatedAt: userObject.updatedAt
     }

@@ -7,43 +7,42 @@ import {
   Resolver
 } from 'awilix'
 
-import App from './App'
+import App from '@/App'
 
 // Application Services
-import UserManager from './app/services/UserManager'
+import UserManager from '@app/services/UserManager'
 
 // EventHandlers
-import NewUserCreatedHandler from './app/eventhandlers/NewUserCreatedHandler'
+import NewUserCreatedHandler from '@app/eventhandlers/NewUserCreatedHandler'
 
 // Domain
 import {
   ToDtoAdapter,
   ToDomainAdapter,
   ToPersistenceAdapter
-} from './domain/adapters/UserAdapter'
-import UserService from './domain/services/UserService'
+} from '@domain/adapters/UserAdapter'
 
 // Infra
-import Config from './infra/config'
-import Database from './infra/database'
-import Logger from './shared/logger'
-import Encryption from './infra/encryption'
-import NodeMailer from './infra/mail/NodeMailer'
-import JWT from './infra/jwt'
-import EventPublisher from './infra/events/EventPublisher'
+import Config from '@infra/config'
+import Database from '@infra/database'
+import Logger from '@shared/logger'
+import HashService from '@/infra/hashing'
+import NodeMailer from '@infra/mail/NodeMailer'
+import JWT from '@infra/jwt'
+import EventPublisher from '@infra/events/EventPublisher'
 
 // Repositories
-import UserRepository from './infra/repositories/user/UserRepository'
+import UserRepository from '@infra/repositories/user/UserRepository'
 
 // Presentation
-import Router from './presentation/http/Router'
-import routeLogger from './presentation/http/middlewares/RouteLogger'
-import errorHandler from './presentation/http/middlewares/ErrorHandler'
-import authGuard from './presentation/http/middlewares/AuthGuard'
-import invalidRouteHandler from './presentation/http/middlewares/InvalidRouteHandler'
+import Router from '@presentation/http/Router'
+import routeLogger from '@presentation/http/middlewares/RouteLogger'
+import errorHandler from '@presentation/http/middlewares/ErrorHandler'
+import authGuard from '@presentation/http/middlewares/AuthGuard'
+import invalidRouteHandler from '@presentation/http/middlewares/InvalidRouteHandler'
 
 // Controllers
-import UserController from './presentation/http/controllers/UserController'
+import UserController from '@presentation/http/controllers/UserController'
 
 const container = createContainer({ injectionMode: InjectionMode.CLASSIC })
 
@@ -61,13 +60,12 @@ container.register({
   toDtoAdapter: asClass(ToDtoAdapter).singleton(),
   toDomainAdapter: asClass(ToDomainAdapter).singleton(),
   toPersistenceAdapter: asClass(ToPersistenceAdapter).singleton(),
-  userService: asClass(UserService).singleton(),
 
   // Infra
   config: asValue(Config),
   database: asClass(Database).singleton(),
   logger: asFunction(Logger).singleton(),
-  encryptionService: asClass(Encryption).singleton(),
+  hashService: asClass(HashService).singleton(),
   mailService: asClass(NodeMailer).singleton(),
   jwtService: asClass(JWT).singleton(),
   eventPublisher: asClass(EventPublisher).singleton(),
