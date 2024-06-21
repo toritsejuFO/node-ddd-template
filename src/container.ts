@@ -20,7 +20,7 @@ import {
   ToDtoAdapter,
   ToDomainAdapter,
   ToPersistenceAdapter
-} from '@domain/adapters/UserAdapter'
+} from '@app/adapters/UserAdapter'
 
 // Infra
 import Config from '@infra/config'
@@ -29,7 +29,7 @@ import Logger from '@shared/logger'
 import HashService from '@/infra/hashing'
 import NodeMailer from '@infra/mail/NodeMailer'
 import JWT from '@infra/jwt'
-import EventPublisher from '@infra/events/EventPublisher'
+import EventPublisher from '@/infra/eventpublisher/EventPublisher'
 
 // Repositories
 import UserRepository from '@infra/repositories/user/UserRepository'
