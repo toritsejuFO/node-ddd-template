@@ -1,3 +1,4 @@
+import { RESOLVER } from 'awilix'
 import { IAdapter, ID, Result } from 'types-ddd'
 
 import User from '@domain/entities/user/User'
@@ -5,6 +6,8 @@ import { UserModel } from '@/app/repositories/UserRepository.interface'
 import { UserDto } from '@app/dtos/UserDto'
 
 export class ToDomainAdapter implements IAdapter<UserModel, User> {
+  static [RESOLVER] = {}
+
   build(userModel: UserModel): Result<User> {
     const user = User.create({
       id: ID.create(userModel.userId),
@@ -23,6 +26,8 @@ export class ToDomainAdapter implements IAdapter<UserModel, User> {
 }
 
 export class ToPersistenceAdapter implements IAdapter<User, UserModel> {
+  static [RESOLVER] = {}
+
   build(user: User): Result<UserModel> {
     const userObject = user.toObject()
 
@@ -43,6 +48,8 @@ export class ToPersistenceAdapter implements IAdapter<User, UserModel> {
 }
 
 export class ToDtoAdapter implements IAdapter<User, Omit<UserDto, 'password'>> {
+  static [RESOLVER] = {}
+
   build(user: User): Result<Omit<UserDto, 'password'>> {
     const userObject = user.toObject()
 

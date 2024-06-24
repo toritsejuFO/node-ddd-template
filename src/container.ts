@@ -4,23 +4,14 @@ import {
   asFunction,
   asClass,
   InjectionMode,
-  Resolver
+  Resolver,
+  Lifetime
 } from 'awilix'
 
 import App from '@/App'
 
-// Application Services
-import UserManager from '@app/services/UserManager'
-
 // EventHandlers
 import NewUserCreatedHandler from '@app/eventhandlers/NewUserCreatedHandler'
-
-// Domain
-import {
-  ToDtoAdapter,
-  ToDomainAdapter,
-  ToPersistenceAdapter
-} from '@app/adapters/UserAdapter'
 
 // Infra
 import Config from '@infra/config'
@@ -31,35 +22,47 @@ import NodeMailer from '@infra/mail/NodeMailer'
 import JWT from '@infra/jwt'
 import EventPublisher from '@/infra/eventpublisher/EventPublisher'
 
-// Repositories
-import UserRepository from '@infra/repositories/user/UserRepository'
-
 // Presentation
 import Router from '@presentation/http/Router'
-import routeLogger from '@presentation/http/middlewares/RouteLogger'
-import errorHandler from '@presentation/http/middlewares/ErrorHandler'
-import authGuard from '@presentation/http/middlewares/AuthGuard'
-import invalidRouteHandler from '@presentation/http/middlewares/InvalidRouteHandler'
-
-// Controllers
-import UserController from '@presentation/http/controllers/UserController'
 
 const container = createContainer({ injectionMode: InjectionMode.CLASSIC })
+
+container.loadModules(
+  [
+    'src/app/services/**/*.ts',
+    'src/app/eventhandlers/**/*.ts',
+    'src/app/adapters/**/*.ts',
+    'src/infra/repositories/**/*.ts',
+    [
+      'src/presentation/http/controllers/**/*.ts',
+      {
+        register: asClass,
+        lifetime: Lifetime.SCOPED
+      }
+    ],
+    [
+      'src/presentation/http/middlewares/**/*.ts',
+      {
+        register: asFunction,
+        lifetime: Lifetime.SCOPED
+      }
+    ]
+  ],
+  {
+    formatName: 'camelCase',
+    resolverOptions: {
+      lifetime: Lifetime.SINGLETON,
+      register: asClass
+    }
+  }
+)
 
 container.register({
   // Application
   app: asClass(App).singleton(),
 
-  // Application Services
-  userManager: asClass(UserManager).singleton(),
-
-  // EventHandlers
+  // EventHandlers (as array to register multiple handlers at once)
   eventHandlers: asArray([asClass(NewUserCreatedHandler).singleton()]),
-
-  // Domain
-  toDtoAdapter: asClass(ToDtoAdapter).singleton(),
-  toDomainAdapter: asClass(ToDomainAdapter).singleton(),
-  toPersistenceAdapter: asClass(ToPersistenceAdapter).singleton(),
 
   // Infra
   config: asValue(Config),
@@ -70,18 +73,8 @@ container.register({
   jwtService: asClass(JWT).singleton(),
   eventPublisher: asClass(EventPublisher).singleton(),
 
-  // Repositories
-  userRepository: asClass(UserRepository).singleton(),
-
   // Presentation
-  router: asClass(Router).singleton(),
-  routeLogger: asFunction(routeLogger).singleton(),
-  errorHandler: asFunction(errorHandler).singleton(),
-  authGuard: asFunction(authGuard).singleton(),
-  invalidRouteHandler: asFunction(invalidRouteHandler).singleton(),
-
-  // Controllers
-  userController: asClass(UserController).scoped()
+  router: asClass(Router).singleton()
 })
 
 function asArray<T>(resolvers: Resolver<T>[]): Resolver<T[]> {

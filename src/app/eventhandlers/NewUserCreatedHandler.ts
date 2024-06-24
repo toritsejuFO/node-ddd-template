@@ -1,13 +1,17 @@
+import { RESOLVER } from 'awilix'
+
 import Event, { NEW_USER_CREATED } from '@domain/events/Event.interface'
 import { Logger } from '@shared/logger'
 import MailService, {
   MailParams
 } from '@app/services/api/MailService.interface'
-import EventHandler from '@app/eventhandlers/EventHandler.interface'
+import EventHandler from '@/app/eventhandlers/EventHandler.interface'
 import JwtService from '@app/services/api/JwtService.interface'
 import User from '@/domain/entities/user/User'
 
 export default class NewUserCreatedHandler implements EventHandler {
+  static [RESOLVER] = {}
+
   private readonly eventName = NEW_USER_CREATED
 
   constructor(
