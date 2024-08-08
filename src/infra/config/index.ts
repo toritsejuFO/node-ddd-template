@@ -10,7 +10,7 @@ const config = {
     options: {
       dialect: process.env.DB_DIALECT || 'postgres',
       storage: process.env.DB_STORAGE || null,
-      logging: process.env.DB_LOGGING === 'true',
+      logging: process.env.DB_LOGGING === 'true'
     }
   },
   jwt: {
