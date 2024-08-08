@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
 
-import UserRepository from '@/app/repositories/UserRepository.interface'
+import UserRepository from '@/app/repositories/interface/UserRepository.interface'
 import JwtService from '@/app/services/interface/JwtService.interface'
 
 export default (jwtService: JwtService, userRepository: UserRepository) =>

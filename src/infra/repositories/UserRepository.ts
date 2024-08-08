@@ -5,7 +5,7 @@ import Database from '@infra/database'
 import { Logger } from '@shared/logger'
 import UserRepository, {
   UserModel
-} from '@/app/repositories/UserRepository.interface'
+} from '@/app/repositories/interface/UserRepository.interface'
 import User from '@domain/entities/user/User'
 
 export default class implements UserRepository {

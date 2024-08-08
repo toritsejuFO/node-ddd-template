@@ -8,10 +8,18 @@ import {
   LoginSchema,
   ActivateAccountSchema
 } from '@presentation/http/schema/UserSchema'
+import { Logger } from '@/shared/logger'
+
+const { CREATED, OK, UNAUTHORIZED, BAD_REQUEST, NOT_FOUND } = StatusCodes
 
 export default class UserController extends BaseController {
-  constructor(private readonly userManager: UserManager) {
-    super()
+  constructor(
+    private readonly userManager: UserManager,
+    protected readonly logger: Logger
+  ) {
+    super(logger)
+
+    this.logger = logger
 
     this.getAllUsers = this.getAllUsers.bind(this)
     this.registerUser = this.registerUser.bind(this)
@@ -24,10 +32,10 @@ export default class UserController extends BaseController {
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await this.userManager.getAllUsers()
-      return res.status(StatusCodes.OK).json(this.success(result))
+      return res.status(OK).json(this.success(result))
     } catch (error) {
       console.log('ERROR', error)
-      return this.handleError(error, res, next)
+      return this.handleError(error, res, next, this.logger)
     }
   }
 
@@ -42,9 +50,9 @@ export default class UserController extends BaseController {
           .json(this.fail(result))
       }
 
-      return res.status(StatusCodes.CREATED).json(this.success(result))
+      return res.status(CREATED).json(this.success(result))
     } catch (error) {
-      return this.handleError(error, res, next)
+      return this.handleError(error, res, next, this.logger)
     }
   }
 
@@ -54,18 +62,18 @@ export default class UserController extends BaseController {
       const result = await this.userManager.login(schema)
 
       if (result.isFail()) {
-        return res.status(StatusCodes.UNAUTHORIZED).json(this.fail(result))
+        return res.status(UNAUTHORIZED).json(this.fail(result))
       }
 
-      return res.status(StatusCodes.OK).send(this.success(result))
+      return res.status(OK).send(this.success(result))
     } catch (error) {
-      return this.handleError(error, res, next)
+      return this.handleError(error, res, next, this.logger)
     }
   }
 
   async getCurrentUser(req: Request, res: Response, next: NextFunction) {
     const result = await this.userManager.getCurrentUser(req.user)
-    return res.status(StatusCodes.OK).send(this.success(result))
+    return res.status(OK).send(this.success(result))
   }
 
   async getUserById(req: Request, res: Response, next: NextFunction) {
@@ -74,12 +82,12 @@ export default class UserController extends BaseController {
       const result = await this.userManager.getUserById(id)
 
       if (result.isFail()) {
-        return res.status(StatusCodes.NOT_FOUND).json(this.fail(result))
+        return res.status(NOT_FOUND).json(this.fail(result))
       }
 
-      return res.status(StatusCodes.OK).json(this.success(result))
+      return res.status(OK).json(this.success(result))
     } catch (error) {
-      return this.handleError(error, res, next)
+      return this.handleError(error, res, next, this.logger)
     }
   }
 
@@ -89,12 +97,12 @@ export default class UserController extends BaseController {
       const result = await this.userManager.activateAccount(schema)
 
       if (result.isFail()) {
-        return res.status(StatusCodes.BAD_REQUEST).json(this.fail(result))
+        return res.status(BAD_REQUEST).json(this.fail(result))
       }
 
-      return res.status(StatusCodes.OK).json(this.success(result))
+      return res.status(OK).json(this.success(result))
     } catch (error) {
-      return this.handleError(error, res, next)
+      return this.handleError(error, res, next, this.logger)
     }
   }
 }
