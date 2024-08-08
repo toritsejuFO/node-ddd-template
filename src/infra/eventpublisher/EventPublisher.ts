@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events'
 
-import EventPublisher from '@domain/events/EventPublisher.interface'
-import Event from '@domain/events/Event.interface'
-import EventHandler from '@app/eventhandlers/EventHandler.interface'
+import EventPublisher from '@/domain/events/interface/EventPublisher.interface'
+import Event from '@domain/events/interface/Event.interface'
+import EventHandler from '@/app/eventhandlers/interface/EventHandler.interface'
 
 export default class extends EventEmitter implements EventPublisher {
   constructor() {
@@ -19,13 +19,13 @@ export default class extends EventEmitter implements EventPublisher {
 
   registerHandler(eventHandler: EventHandler) {
     const registered = this.listeners(eventHandler.getEventName()).find(
-      (h) => String(h.name) === String(eventHandler.handler.name)
+      (h) => String(h.name) === String(eventHandler.handle.name)
     )
 
-    // Avoid duplicate handler registration for whatever reason
+    // Avoid duplicate handler registration for the same event for whatever reason
     if (!registered) {
-      // handler is bound to the instance of the eventHandler
-      this.on(eventHandler.getEventName(), eventHandler.handler)
+      // handle method must already be bound to the instance of the eventHandler
+      this.on(eventHandler.getEventName(), eventHandler.handle)
     }
   }
 }

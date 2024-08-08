@@ -2,17 +2,17 @@ import { IAdapter, Result } from 'types-ddd'
 
 import UserRepository from '@/app/repositories/UserRepository.interface'
 import User from '@domain/entities/user/User'
-import UserManager from '@app/services/api/UserManager.interface'
+import UserManager from '@/app/services/interface/UserManager.interface'
 import NewUserCreatedEvent from '@domain/events/NewUserCreatedEvent'
-import HashService from '@app/services/api/HashService.interface'
-import EventPublisher from '@domain/events/EventPublisher.interface'
+import HashService from '@/app/services/interface/HashService.interface'
+import EventPublisher from '@/domain/events/interface/EventPublisher.interface'
 import {
   NewUserDto,
   UserDto,
   LoginDto,
   ActivateAccountDto
 } from '@app/dtos/UserDto'
-import JwtService from '@/app/services/api/JwtService.interface'
+import JwtService from '@/app/services/interface/JwtService.interface'
 import {
   INVALID_LOGIN,
   INVALID_TOKEN,

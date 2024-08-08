@@ -6,8 +6,8 @@ import { AwilixContainer } from 'awilix'
 import { Database } from '@infra/database'
 import { Config } from '@infra/config'
 import { Logger } from '@shared/logger'
-import EventHandler from '@app/eventhandlers/EventHandler.interface'
-import EventPublisher from '@domain/events/EventPublisher.interface'
+import EventHandler from '@/app/eventhandlers/interface/EventHandler.interface'
+import EventPublisher from '@/domain/events/interface/EventPublisher.interface'
 
 export interface App {
   app: Application

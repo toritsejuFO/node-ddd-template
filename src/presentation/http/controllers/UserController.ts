@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
 
-import UserManager from '@app/services/api/UserManager.interface'
+import UserManager from '@/app/services/interface/UserManager.interface'
 import BaseController from '@presentation/http/controllers/BaseController'
 import {
   NewUserSchema,
