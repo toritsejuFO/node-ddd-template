@@ -16,7 +16,10 @@ type NonCreationFields = {
   updatedAt: Date
 }
 
-export type UserDto = z.mergeTypes<NewUserDto, NonCreationFields>
+export type UserDto = z.mergeTypes<
+  Omit<NewUserDto, 'password'>,
+  NonCreationFields
+>
 
 export type LoginDto = z.infer<typeof LoginSchema>
 

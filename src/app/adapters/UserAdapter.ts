@@ -47,10 +47,10 @@ export class ToPersistenceAdapter implements IAdapter<User, UserModel> {
   }
 }
 
-export class ToDtoAdapter implements IAdapter<User, Omit<UserDto, 'password'>> {
+export class ToDtoAdapter implements IAdapter<User, UserDto> {
   static [RESOLVER] = {}
 
-  build(user: User): Result<Omit<UserDto, 'password'>> {
+  build(user: User): Result<UserDto> {
     const userObject = user.toObject()
 
     const userDto = {
