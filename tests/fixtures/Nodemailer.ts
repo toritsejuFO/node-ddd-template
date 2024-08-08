@@ -1,6 +1,6 @@
 import MailService, {
   MailParams
-} from '@app/services/api/MailService.interface'
+} from '@/app/services/interface/MailService.interface'
 
 export default class implements MailService {
   constructor() {}

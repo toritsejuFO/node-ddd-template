@@ -5,6 +5,7 @@ import { ZodError } from 'zod'
 import { formatZodError } from '../schema/ZodHelper'
 import { Result } from 'types-ddd'
 import { USER_ALREADY_EXISTS } from '@/app/messaging/UserMessage'
+import { Logger } from '@/shared/logger'
 
 type ErrorResponse = {
   success: boolean
@@ -13,7 +14,11 @@ type ErrorResponse = {
 }
 
 export default abstract class BaseController {
-  handleError(error: any, res: Response, next: NextFunction) {
+  constructor(protected logger: Logger) {}
+
+  handleError(error: any, res: Response, next: NextFunction, logger: Logger) {
+    logger.error('ERROR', error)
+
     if (error instanceof ZodError) {
       return res.status(StatusCodes.BAD_REQUEST).send({
         success: false,

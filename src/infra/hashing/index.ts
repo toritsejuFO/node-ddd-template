@@ -1,5 +1,5 @@
 import { hashSync, compareSync } from 'bcrypt'
-import HashService from '@app/services/api/HashService.interface'
+import HashService from '@/app/services/interface/HashService.interface'
 
 export default class implements HashService {
   private readonly SALT = 10
