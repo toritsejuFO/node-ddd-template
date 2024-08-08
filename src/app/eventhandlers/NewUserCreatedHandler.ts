@@ -1,10 +1,12 @@
-import Event, { NEW_USER_CREATED } from '@domain/events/Event.interface'
+import Event, {
+  NEW_USER_CREATED
+} from '@domain/events/interface/Event.interface'
 import { Logger } from '@shared/logger'
 import MailService, {
   MailParams
-} from '@app/services/api/MailService.interface'
-import EventHandler from '@app/eventhandlers/EventHandler.interface'
-import JwtService from '@app/services/api/JwtService.interface'
+} from '@/app/services/interface/MailService.interface'
+import EventHandler from '@/app/eventhandlers/interface/EventHandler.interface'
+import JwtService from '@/app/services/interface/JwtService.interface'
 import User from '@/domain/entities/user/User'
 
 export default class NewUserCreatedHandler implements EventHandler {
@@ -15,14 +17,21 @@ export default class NewUserCreatedHandler implements EventHandler {
     private readonly logger: Logger,
     private readonly jwtService: JwtService
   ) {
-    this.handler = this.handler.bind(this)
+    this.handle = this.handle.bind(this)
   }
 
   getEventName() {
     return this.eventName
   }
 
-  handler(event: Event) {
+  handle(event: Event) {
+    if (event.getName() !== this.getEventName()) {
+      this.logger.warn(
+        `Possible bug, kindly ensure event name of event matches handler's event name`
+      )
+      return
+    }
+
     const user: User = event.getPayload()
     const userObject = user.toObject()
 

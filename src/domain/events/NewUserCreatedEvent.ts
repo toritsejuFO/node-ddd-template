@@ -1,4 +1,4 @@
-import Event from '@/domain/events/Event.interface'
+import Event from '@/domain/events/interface/Event.interface'
 
 export const eventName = 'NEW_USER_CREATED'
 

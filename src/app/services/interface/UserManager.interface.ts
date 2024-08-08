@@ -6,6 +6,7 @@ import {
   ActivateAccountDto
 } from '@app/dtos/UserDto'
 import User from '@/domain/entities/user/User'
+import BaseManager from '@app/services/BaseManager'
 
 export default interface UserManager {
   getAllUsers(): Promise<Result<UserDto[]>>
@@ -15,5 +16,5 @@ export default interface UserManager {
   getUserById(id: string): Promise<Result<UserDto | void>>
   activateAccount(
     activateAccountDto: ActivateAccountDto
-  ): Promise<Result<string>>
+  ): Promise<Result<string | void>>
 }
