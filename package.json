@@ -12,7 +12,7 @@
     "serve": "npm run build && npm run start",
     "sq": "sequelize-cli",
     "lint": "eslint --ignore-path .gitignore --ext .ts",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts)\""
   },
   "repository": {
     "type": "git",
