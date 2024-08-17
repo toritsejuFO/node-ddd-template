@@ -1,29 +1,16 @@
-export const USER_ALREADY_EXISTS = {
-  code: 'USER_ALREADY_EXISTS',
-  message: 'User already exists'
+const MESSAGES = {
+  USER_ALREADY_EXISTS: 'User already exists',
+  USER_NOT_FOUND: 'User not found',
+  INVALID_LOGIN: 'Invalid email or password',
+  INVALID_TOKEN: 'Invalid token received',
+  USER_ACTIVATED: 'User account activated',
+  USER_ALREADY_ACTIVATED: 'User account already activated',
+  USERS_FETCHED_SUCCESSFULLY: 'User accounts fetched successfully',
+  USER_FETCHED_SUCCESSFULLY: 'User account fetched successfully',
+  USER_REGISTERED_SUCCESSFULLY: 'User registered successfully',
+  USER_REGISTRATION_FAILED: 'User registration failed',
+  LOGIN_SUCCESSFUL: 'User logged in successfully',
+  LOGIN_FAILED: 'User login failed'
 }
 
-export const USER_NOT_FOUND = {
-  code: 'USER_NOT_FOUND',
-  message: 'User not found'
-}
-
-export const INVALID_LOGIN = {
-  code: 'INVALID_LOGIN',
-  message: 'Invalid email or password'
-}
-
-export const INVALID_TOKEN = {
-  code: 'INVALID_TOKEN',
-  message: 'Invalid token received'
-}
-
-export const USER_ACTIVATED = {
-  code: 'USER_ACTIVATED',
-  message: 'User account activated'
-}
-
-export const USER_ALREADY_ACTIVATED = {
-  code: 'USER_ALREADY',
-  message: 'User account already activated'
-}
+export default MESSAGES
