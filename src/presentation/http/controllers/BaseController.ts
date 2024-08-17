@@ -4,13 +4,18 @@ import { ZodError } from 'zod'
 
 import { formatZodError } from '../schema/ZodHelper'
 import { Result } from 'types-ddd'
-import { USER_ALREADY_EXISTS } from '@/app/messaging/UserMessage'
 import { Logger } from '@/shared/logger'
 
 type ErrorResponse = {
   success: boolean
-  message: string
+  message?: string
   errors?: any
+}
+
+type OkResponse = {
+  success: boolean
+  message?: string
+  data?: any
 }
 
 export default abstract class BaseController {
@@ -30,35 +35,23 @@ export default abstract class BaseController {
     return next(error)
   }
 
-  evaluateStatusCode(result: Result<any, any, any>) {
-    const metaData = result.metaData()
-    if (!metaData) return StatusCodes.BAD_REQUEST
-
-    switch (metaData.code) {
-      case USER_ALREADY_EXISTS.code:
-        return StatusCodes.CONFLICT
-      default:
-        return StatusCodes.BAD_REQUEST
-    }
-  }
-
   fail(result: Result<any, any, any>) {
     const response: ErrorResponse = {
       success: false,
       message: result.error()
     }
-
-    if (result.metaData()) {
-      response.errors = result.metaData()
-    }
-
     return response
   }
 
   success(result: Result<any, any, any>) {
-    return {
-      success: true,
-      data: result.value()
+    const response: OkResponse = { success: true }
+
+    if (typeof result.value() === 'string') {
+      response.message = result.value()
+    } else {
+      response.data = result.value()
+      response.message = result.metaData()
     }
+    return response
   }
 }

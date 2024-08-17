@@ -1,5 +1,5 @@
 import { describe, it, mock } from 'node:test'
-import { strictEqual, ok, deepEqual } from 'node:assert/strict'
+import { strictEqual, deepEqual } from 'node:assert/strict'
 
 import User from '@domain/entities/user/User'
 import { newUserDto } from 'tests/fixtures/User'
@@ -13,7 +13,7 @@ describe('@domain/entities/user/User', () => {
 
       const userObject = result.value().toObject()
 
-      ok(userObject.id)
+      strictEqual(!!userObject.id, true)
       strictEqual(userObject.email, 'johndoe@example.com')
       strictEqual(userObject.isEmailVerified, undefined)
       strictEqual(userObject.isActive, undefined)
@@ -26,7 +26,7 @@ describe('@domain/entities/user/User', () => {
   describe('User::activate()', () => {
     it('should activate user account successfully', () => {
       const result = User.create(newUserDto)
-      ok(result.isOk())
+      strictEqual(result.isOk(), true)
 
       const user = result.value()
       const spy = mock.fn(user.activate)
@@ -44,12 +44,12 @@ describe('@domain/entities/user/User', () => {
   describe('User::getLoginTokenPayload()', () => {
     it('should return user login token payload successfully', () => {
       const result = User.create(newUserDto)
-      ok(result.isOk())
+      strictEqual(result.isOk(), true)
 
       const user = result.value()
       const loginTokenPayload = user.getLoginTokenPayload()
 
-      ok(loginTokenPayload.id)
+      strictEqual(!!loginTokenPayload.id, true)
       strictEqual(loginTokenPayload.email, newUserDto.email)
       deepEqual(Object.keys(loginTokenPayload), ['email', 'id'])
     })
@@ -58,13 +58,13 @@ describe('@domain/entities/user/User', () => {
   describe('User::getActivateTokenPayload()', () => {
     it('should return user activation token payload successfully', () => {
       const result = User.create(newUserDto)
-      ok(result.isOk())
+      strictEqual(result.isOk(), true)
 
       const user = result.value()
       const loginTokenPayload = user.getActivateTokenPayload()
 
-      ok(loginTokenPayload.id)
-      ok(loginTokenPayload.activate)
+      strictEqual(!!loginTokenPayload.id, true)
+      strictEqual(loginTokenPayload.activate, true)
       strictEqual(loginTokenPayload.email, newUserDto.email)
       deepEqual(Object.keys(loginTokenPayload), ['email', 'id', 'activate'])
     })
@@ -73,21 +73,21 @@ describe('@domain/entities/user/User', () => {
   describe('User::login()', () => {
     it('should not login an inactive user', () => {
       const createResult = User.create(newUserDto)
-      ok(createResult.isOk())
+      strictEqual(createResult.isOk(), true)
 
       const user = createResult.value()
       const loginResult = user.login()
-      ok(loginResult.isFail())
+      strictEqual(loginResult.isFail(), true)
     })
 
     it('should login an active user', () => {
       const createResult = User.create(newUserDto)
-      ok(createResult.isOk())
+      strictEqual(createResult.isOk(), true)
 
       const user = createResult.value()
       user.activate()
       const loginResult = user.login()
-      ok(loginResult.isOk())
+      strictEqual(loginResult.isOk(), true)
     })
   })
 })
