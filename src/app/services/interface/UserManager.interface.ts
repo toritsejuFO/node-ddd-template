@@ -1,4 +1,5 @@
 import { Result } from 'types-ddd'
+
 import {
   NewUserDto,
   UserDto,
@@ -6,7 +7,6 @@ import {
   ActivateAccountDto
 } from '@app/dtos/UserDto'
 import User from '@/domain/entities/user/User'
-import BaseManager from '@app/services/BaseManager'
 
 export default interface UserManager {
   getAllUsers(): Promise<Result<UserDto[]>>

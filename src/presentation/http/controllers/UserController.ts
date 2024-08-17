@@ -45,9 +45,7 @@ export default class UserController extends BaseController {
       const result = await this.userManager.registerUser(schema)
 
       if (result.isFail()) {
-        return res
-          .status(this.evaluateStatusCode(result))
-          .json(this.fail(result))
+        return res.status(BAD_REQUEST).json(this.fail(result))
       }
 
       return res.status(CREATED).json(this.success(result))

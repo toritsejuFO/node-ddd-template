@@ -1,4 +1,4 @@
-import { asClass } from 'awilix'
+import { asClass, AwilixContainer } from 'awilix'
 import supertest from 'supertest'
 import TestAgent from 'supertest/lib/agent'
 
@@ -9,6 +9,7 @@ import Nodemailer from 'tests/fixtures/Nodemailer'
 export const beforeAll = async (): Promise<{
   app: App
   request: TestAgent
+  container: AwilixContainer
 }> => {
   container.register({
     mailService: asClass(Nodemailer).singleton()
@@ -18,7 +19,7 @@ export const beforeAll = async (): Promise<{
   app.start(container)
   const request = supertest(app.app)
 
-  return { app, request }
+  return { app, request, container }
 }
 
 export const afterAll = async (app: App) => {
