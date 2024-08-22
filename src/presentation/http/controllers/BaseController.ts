@@ -21,8 +21,8 @@ type OkResponse = {
 export default abstract class BaseController {
   constructor(protected logger: Logger) {}
 
-  handleError(error: any, res: Response, next: NextFunction, logger: Logger) {
-    logger.error('ERROR', error)
+  handleError(error: any, res: Response, next: NextFunction) {
+    this.logger.error('ERROR', error)
 
     if (error instanceof ZodError) {
       return res.status(StatusCodes.BAD_REQUEST).send({

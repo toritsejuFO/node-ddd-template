@@ -32,17 +32,16 @@ export default class NewUserCreatedHandler implements EventHandler {
       return
     }
 
-    const user: User = event.getPayload()
-    const userObject = user.toObject()
-
     this.logger.info(
       `Event::${event.getName()} - EventHandler::${this.constructor.name}`
     )
 
+    const user: User = event.getPayload()
     const activationToken = this.jwtService.encode(
       user.getActivateTokenPayload()
     )
 
+    const userObject = user.toObject()
     const mailParams: MailParams = {
       to: userObject.email,
       subject: 'Activate your account',
