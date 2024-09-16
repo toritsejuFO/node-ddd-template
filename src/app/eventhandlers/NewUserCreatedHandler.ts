@@ -8,6 +8,7 @@ import MailService, {
 import EventHandler from '@/app/eventhandlers/interface/EventHandler.interface'
 import JwtService from '@/app/services/interface/JwtService.interface'
 import User from '@/domain/entities/user/User'
+import { Config } from '@/infra/config'
 
 export default class NewUserCreatedHandler implements EventHandler {
   private readonly eventName = NEW_USER_CREATED
@@ -15,7 +16,8 @@ export default class NewUserCreatedHandler implements EventHandler {
   constructor(
     private readonly mailService: MailService,
     private readonly logger: Logger,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly config: Config
   ) {
     this.handle = this.handle.bind(this)
   }
@@ -24,7 +26,7 @@ export default class NewUserCreatedHandler implements EventHandler {
     return this.eventName
   }
 
-  handle(event: Event) {
+  async handle(event: Event) {
     if (event.getName() !== this.getEventName()) {
       this.logger.warn(
         `Possible bug, kindly ensure event name of event matches handler's event name`
@@ -32,9 +34,10 @@ export default class NewUserCreatedHandler implements EventHandler {
       return
     }
 
-    this.logger.info(
-      `Event::${event.getName()} - EventHandler::${this.constructor.name}`
-    )
+    this.logger.info({
+      code: 'NEW_USER_CREATED',
+      message: `Event::${event.getName()} - EventHandler::${this.constructor.name}`
+    })
 
     const user: User = event.getPayload()
     const activationToken = this.jwtService.encode(
@@ -49,6 +52,23 @@ export default class NewUserCreatedHandler implements EventHandler {
       data: { ...userObject, activationToken }
     }
 
-    return this.mailService.sendMail(mailParams)
+    try {
+      if (this.config.app.isDev) {
+        this.logger.info({
+          code: 'IS_DEV_SKIP_MAIL',
+          message: 'Mail sent successfully',
+          item: { token: activationToken }
+        })
+      } else {
+        await this.mailService.sendMail(mailParams)
+      }
+    } catch (error: any) {
+      this.logger.error({
+        code: 'FAILED_TO_SEND_EMAIL',
+        message: error.message,
+        item: { userId: userObject.id }
+      })
+      this.logger.error(error)
+    }
   }
 }
