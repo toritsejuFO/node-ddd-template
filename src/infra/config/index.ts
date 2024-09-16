@@ -3,7 +3,8 @@ const config = {
     env: process.env.NODE_ENV || 'development',
     port: process.env.APP_PORT || '4300',
     name: process.env.APP_NAME || 'App',
-    logLevel: process.env.LOG_LEVEL || 'DEBUG'
+    logLevel: process.env.APP_LOG_LEVEL || 'INFO',
+    isDev: ['dev', 'development'].includes(process.env.NODE_ENV || 'dev')
   },
   db: {
     url: String(process.env.DB_URI),

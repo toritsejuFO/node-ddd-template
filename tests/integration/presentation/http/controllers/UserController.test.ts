@@ -111,9 +111,9 @@ describe('@presentation/http/controller/UserController', () => {
         strictEqual(res.body.data.isEmailVerified, false)
         strictEqual(res.body.data.isActive, false)
 
-        // save activationToken for reuse if test passes
-        activationToken =
-          mockedSpy.mock.calls[0].arguments[0].data.activationToken
+        // prettier-ignore
+        // save activationToken for reuse when test passes
+        activationToken = mockedSpy.mock.calls[0].arguments[0].data.activationToken
       })
 
       it('400 - should not register a user with an existing email', async () => {
@@ -130,53 +130,48 @@ describe('@presentation/http/controller/UserController', () => {
   })
 
   describe('Authentication Flow', () => {
-    describe('UserController::login()', () => {
-      it('401 - should not login inactive user', async () => {
-        const res = await request
-          .post('/user/login')
-          .send({
-            email: newUserDto.email,
-            password: newUserDto.password
-          })
-          .set('Accept', 'application/json')
+    it('401 - should not login inactive user', async () => {
+      const res = await request
+        .post('/user/login')
+        .send({
+          email: newUserDto.email,
+          password: newUserDto.password
+        })
+        .set('Accept', 'application/json')
 
-        strictEqual(res.status, StatusCodes.UNAUTHORIZED)
-        strictEqual(res.body.success, false)
-        strictEqual(res.body.message, 'Account not active')
-      })
+      strictEqual(res.status, StatusCodes.UNAUTHORIZED)
+      strictEqual(res.body.success, false)
+      strictEqual(res.body.message, 'Account not active')
     })
 
-    describe('UserController::activateUser()', () => {
-      it('200 - should activate user successfuly', async () => {
-        const res = await request
-          .get('/user/activate')
-          .query({ token: activationToken })
-          .set('Accept', 'application/json')
+    it('200 - should activate user successfuly', async () => {
+      const res = await request
+        .get('/user/activate')
+        .query({ token: activationToken })
+        .set('Accept', 'application/json')
 
-        strictEqual(res.status, StatusCodes.OK)
-        strictEqual(res.body.success, true)
-        strictEqual(res.body.message, 'User account activated')
-      })
+      console.log(res.body)
+      strictEqual(res.status, StatusCodes.OK)
+      strictEqual(res.body.success, true)
+      strictEqual(res.body.message, 'User account activated')
     })
 
-    describe('UserController::login()', () => {
-      it('200 - should login user successfuly', async () => {
-        const res = await request
-          .post('/user/login')
-          .send({
-            email: newUserDto.email,
-            password: newUserDto.password
-          })
-          .set('Accept', 'application/json')
+    it('200 - should login user successfuly', async () => {
+      const res = await request
+        .post('/user/login')
+        .send({
+          email: newUserDto.email,
+          password: newUserDto.password
+        })
+        .set('Accept', 'application/json')
 
-        strictEqual(res.status, StatusCodes.OK)
-        strictEqual(res.body.success, true)
-        strictEqual(res.body.message, 'User logged in successfully')
-        strictEqual(!!res.body.data.token, true)
+      strictEqual(res.status, StatusCodes.OK)
+      strictEqual(res.body.success, true)
+      strictEqual(res.body.message, 'User logged in successfully')
+      strictEqual(!!res.body.data.token, true)
 
-        // save loginToken for reuse test if test passes
-        loginToken = res.body.data.token
-      })
+      // save loginToken for reuse test when test passes
+      loginToken = res.body.data.token
     })
   })
 
@@ -206,7 +201,7 @@ describe('@presentation/http/controller/UserController', () => {
       strictEqual(res.body.message, 'User account fetched successfully')
       strictEqual(res.body.data.email, newUserDto.email)
 
-      // save currentUser for reuse if test passes
+      // save currentUser for reuse when test passes
       currentUser = res.body.data
     })
   })

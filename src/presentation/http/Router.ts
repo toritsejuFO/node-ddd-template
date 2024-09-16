@@ -14,25 +14,17 @@ export default class Router {
   setupRoutes(app: Application, container: AwilixContainer) {
     app.use(this.routeLogger)
 
+    const userController = function () {
+      return container.resolve(USER_CONTROLLER)
+    }
+
     // User routes
-    app.get(
-      '/users',
-      this.authGuard,
-      container.resolve(USER_CONTROLLER).getAllUsers
-    )
-    app.post('/user/register', container.resolve(USER_CONTROLLER).registerUser)
-    app.post('/user/login', container.resolve(USER_CONTROLLER).login)
-    app.get(
-      '/user/me',
-      this.authGuard,
-      container.resolve(USER_CONTROLLER).getCurrentUser
-    )
-    app.get('/user/activate', container.resolve(USER_CONTROLLER).activateUser)
-    app.get(
-      '/user/:id',
-      this.authGuard,
-      container.resolve(USER_CONTROLLER).getUserById
-    )
+    app.get('/users', this.authGuard, userController().getAllUsers)
+    app.post('/user/register', userController().registerUser)
+    app.post('/user/login', userController().login)
+    app.get('/user/me', this.authGuard, userController().getCurrentUser)
+    app.get('/user/activate', userController().activateUser)
+    app.get('/user/:id', this.authGuard, userController().getUserById)
 
     app.use(this.invalidRouteHandler)
     app.use(this.errorHandler)

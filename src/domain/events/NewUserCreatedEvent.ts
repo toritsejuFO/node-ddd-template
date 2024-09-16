@@ -1,9 +1,9 @@
-import Event from '@/domain/events/interface/Event.interface'
-
-export const eventName = 'NEW_USER_CREATED'
+import Event, {
+  NEW_USER_CREATED
+} from '@/domain/events/interface/Event.interface'
 
 export default class NewUserCreatedEvent implements Event {
-  private readonly name = eventName
+  private readonly name = NEW_USER_CREATED
 
   constructor(private readonly payload: any) {
     this.payload = payload

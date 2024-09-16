@@ -10,6 +10,9 @@
     "build": "npm run clean && tsc -p tsconfig.build.json",
     "start": "tsx --env-file=.env dist/index.js",
     "serve": "npm run build && npm run start",
+    "docker:build": "docker build -t node-ddd-template .",
+    "docker:run": "docker run -it --rm --name ndt --env-file=.env.docker -p 4300:4300 node-ddd-template",
+    "docker:start": "npm run docker:build && npm run docker:run",
     "sq": "sequelize-cli",
     "lint": "eslint --ignore-path .gitignore --ext .ts",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts)\""
@@ -23,7 +26,6 @@
   "license": "ISC",
   "dependencies": {
     "awilix": "^6.0.0",
-    "bcrypt": "^5.0.1",
     "express": "^4.17.2",
     "http-status-codes": "^2.2.0",
     "jsonwebtoken": "^8.5.1",
@@ -38,7 +40,6 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^6.0.0-alpha.3",
-    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.2",
