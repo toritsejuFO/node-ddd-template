@@ -1,6 +1,8 @@
 import User from '@domain/entities/user/User'
+import { IPageable } from '@shared/utils/IPageable'
+import { PageRequest } from '@app/dtos/PageRequestDto'
 
-export interface UserModel {
+export interface IUserModel {
   userId: string
   firstname: string
   lastname: string
@@ -12,8 +14,9 @@ export interface UserModel {
   updatedAt?: Date
 }
 
-export default interface UserRepository {
-  findAll(): Promise<User[]>
+export interface IUserRepository {
+  findAll(pageRequest: PageRequest): Promise<IPageable<User>>
+  findAllBy(where: any, pageRequest: PageRequest): Promise<IPageable<User>>
   findOneById(userId: string): Promise<User | null>
   findOneByEmail(email: string): Promise<User | null>
   existsById(userId: string): Promise<boolean>

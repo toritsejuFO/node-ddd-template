@@ -1,6 +1,6 @@
 import { IAdapter, Result } from 'types-ddd'
 
-import UserRepository from '@/app/repositories/interface/UserRepository.interface'
+import { IUserRepository } from '@/app/repositories/IUserRepository'
 import User from '@domain/entities/user/User'
 import UserManager from '@/app/services/interface/UserManager.interface'
 import NewUserCreatedEvent from '@domain/events/NewUserCreatedEvent'
@@ -15,6 +15,7 @@ import {
 import JwtService from '@/app/services/interface/JwtService.interface'
 import USER_MESSAGE from '@/app/messaging/UserMessage'
 import { Logger } from '@/shared/logger'
+import { PageRequest } from '@app/dtos/PageRequestDto'
 
 const {
   USER_ALREADY_EXISTS,
@@ -33,7 +34,7 @@ const {
 
 export default class implements UserManager {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly userRepository: IUserRepository,
     private readonly eventPublisher: EventPublisher,
     private readonly hashService: HashService,
     private readonly toDtoAdapter: IAdapter<User, UserDto>,
@@ -41,12 +42,15 @@ export default class implements UserManager {
     protected readonly logger: Logger
   ) {}
 
-  async getAllUsers() {
-    const users = await this.userRepository.findAll()
-    const userDtoList = users
-      .map(this.toDtoAdapter.build)
-      .map((result) => result.value())
-    return Result.Ok(userDtoList, USERS_FETCHED_SUCCESSFULLY)
+  async getAllUsers(pageRequest: PageRequest) {
+    const pageable = await this.userRepository.findAll(pageRequest)
+
+    const userDtoList = pageable.data.map((user) =>
+      this.toDtoAdapter.build(user).value()
+    )
+    const response = Object.assign(pageable, { data: userDtoList })
+
+    return Result.Ok(response, USERS_FETCHED_SUCCESSFULLY)
   }
 
   async registerUser(userDto: NewUserDto) {

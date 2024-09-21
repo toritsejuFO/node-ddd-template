@@ -150,7 +150,6 @@ describe('@presentation/http/controller/UserController', () => {
         .query({ token: activationToken })
         .set('Accept', 'application/json')
 
-      console.log(res.body)
       strictEqual(res.status, StatusCodes.OK)
       strictEqual(res.body.success, true)
       strictEqual(res.body.message, 'User account activated')
@@ -182,10 +181,19 @@ describe('@presentation/http/controller/UserController', () => {
         .set('Accept', 'application/json')
         .set('X-Auth-Token', loginToken)
 
+      console.log(res.body)
       strictEqual(res.status, StatusCodes.OK)
       strictEqual(res.body.success, true)
       strictEqual(res.body.message, 'User accounts fetched successfully')
-      strictEqual(res.body.data.length, 1)
+      strictEqual(res.body.data.data.length, 1)
+      strictEqual(res.body.data.itemsReturned, 1)
+      strictEqual(res.body.data.totalItems, 1)
+      strictEqual(res.body.data.currentPage, 1)
+      strictEqual(res.body.data.totalPages, 1)
+      strictEqual(res.body.data.hasNext, false)
+      strictEqual(res.body.data.hasPrev, false)
+      strictEqual(res.body.data.nextPage, null)
+      strictEqual(res.body.data.prevPage, null)
     })
   })
 
