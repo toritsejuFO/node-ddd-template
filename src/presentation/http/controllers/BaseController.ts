@@ -2,7 +2,7 @@ import { NextFunction, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { ZodError } from 'zod'
 
-import { formatZodError } from '../schema/ZodHelper'
+import { formatZodError } from '@presentation/http/schema/ZodHelper'
 import { Result } from 'types-ddd'
 import { Logger } from '@/shared/logger'
 

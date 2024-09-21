@@ -109,3 +109,4 @@ dist
 build
 
 .env.docker
+test.db

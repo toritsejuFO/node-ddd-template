@@ -6,8 +6,6 @@ import {
   ActivateAccountSchema
 } from '@presentation/http/schema/UserSchema'
 
-export type NewUserDto = z.infer<typeof NewUserSchema>
-
 type NonCreationFields = {
   id: string
   isEmailVerified: boolean
@@ -15,6 +13,8 @@ type NonCreationFields = {
   createdAt: Date
   updatedAt: Date
 }
+
+export type NewUserDto = z.infer<typeof NewUserSchema>
 
 export type UserDto = z.mergeTypes<
   Omit<NewUserDto, 'password'>,
