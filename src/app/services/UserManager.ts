@@ -1,6 +1,6 @@
 import { IAdapter, Result } from 'types-ddd'
 
-import UserRepository from '@/app/repositories/interface/UserRepository.interface'
+import { IUserRepository } from '@/app/repositories/IUserRepository'
 import User from '@domain/entities/user/User'
 import UserManager from '@/app/services/interface/UserManager.interface'
 import NewUserCreatedEvent from '@domain/events/NewUserCreatedEvent'
@@ -13,12 +13,28 @@ import {
   ActivateAccountDto
 } from '@app/dtos/UserDto'
 import JwtService from '@/app/services/interface/JwtService.interface'
-import MESSAGE from '@/app/messaging/UserMessage'
+import USER_MESSAGE from '@/app/messaging/UserMessage'
 import { Logger } from '@/shared/logger'
+import { PageRequest } from '@app/dtos/PageRequestDto'
+
+const {
+  USER_ALREADY_EXISTS,
+  USER_NOT_FOUND,
+  INVALID_LOGIN,
+  INVALID_TOKEN,
+  USER_ACTIVATED,
+  USER_ALREADY_ACTIVATED,
+  USERS_FETCHED_SUCCESSFULLY,
+  USER_FETCHED_SUCCESSFULLY,
+  USER_REGISTERED_SUCCESSFULLY,
+  USER_REGISTRATION_FAILED,
+  LOGIN_SUCCESSFUL,
+  LOGIN_FAILED
+} = USER_MESSAGE
 
 export default class implements UserManager {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly userRepository: IUserRepository,
     private readonly eventPublisher: EventPublisher,
     private readonly hashService: HashService,
     private readonly toDtoAdapter: IAdapter<User, UserDto>,
@@ -26,22 +42,25 @@ export default class implements UserManager {
     protected readonly logger: Logger
   ) {}
 
-  async getAllUsers() {
-    const users = await this.userRepository.findAll()
-    const userDtoList = users
-      .map(this.toDtoAdapter.build)
-      .map((result) => result.value())
-    return Result.Ok(userDtoList, MESSAGE.USERS_FETCHED_SUCCESSFULLY)
+  async getAllUsers(pageRequest: PageRequest) {
+    const pageable = await this.userRepository.findAll(pageRequest)
+
+    const userDtoList = pageable.data.map((user) =>
+      this.toDtoAdapter.build(user).value()
+    )
+    const response = Object.assign(pageable, { data: userDtoList })
+
+    return Result.Ok(response, USERS_FETCHED_SUCCESSFULLY)
   }
 
   async registerUser(userDto: NewUserDto) {
     if (await this.userRepository.existsByEmail(userDto.email)) {
-      return Result.fail(MESSAGE.USER_ALREADY_EXISTS)
+      return Result.fail(USER_ALREADY_EXISTS)
     }
 
     const result = User.create(userDto)
     if (result.isFail()) {
-      return Result.fail(result.error() || MESSAGE.USER_REGISTRATION_FAILED)
+      return Result.fail(result.error() || USER_REGISTRATION_FAILED)
     }
 
     const user = result.value()
@@ -51,7 +70,7 @@ export default class implements UserManager {
     this.eventPublisher.publishEvent(new NewUserCreatedEvent(savedUser))
 
     const retUserDto = this.toDtoAdapter.build(savedUser).value()
-    return Result.Ok(retUserDto, MESSAGE.USER_REGISTERED_SUCCESSFULLY)
+    return Result.Ok(retUserDto, USER_REGISTERED_SUCCESSFULLY)
   }
 
   async login(loginDto: LoginDto) {
@@ -59,51 +78,48 @@ export default class implements UserManager {
 
     const user = await this.userRepository.findOneByEmail(email)
     if (!(user && this.hashService.compare(password, user.get('password')))) {
-      return Result.fail(MESSAGE.INVALID_LOGIN)
+      return Result.fail(INVALID_LOGIN)
     }
 
     const result = user.login()
     if (result.isFail()) {
-      return Result.fail(result.error() || MESSAGE.LOGIN_FAILED)
+      return Result.fail(result.error() || LOGIN_FAILED)
     }
 
     const authToken = this.jwtService.encode(user.getLoginTokenPayload())
-    return Result.Ok({ token: authToken }, MESSAGE.LOGIN_SUCCESSFUL)
+    return Result.Ok({ token: authToken }, LOGIN_SUCCESSFUL)
   }
 
   async getCurrentUser(user: User) {
     const userDto = this.toDtoAdapter.build(user).value()
-    return Result.Ok(userDto, MESSAGE.USER_FETCHED_SUCCESSFULLY)
+    return Result.Ok(userDto, USER_FETCHED_SUCCESSFULLY)
   }
 
   async getUserById(id: string) {
     const user = await this.userRepository.findOneById(id)
     if (!user) {
-      return Result.fail(MESSAGE.USER_NOT_FOUND)
+      return Result.fail(USER_NOT_FOUND)
     }
 
     const userDto = this.toDtoAdapter.build(user).value()
-    return Result.Ok(userDto, MESSAGE.USER_FETCHED_SUCCESSFULLY)
+    return Result.Ok(userDto, USER_FETCHED_SUCCESSFULLY)
   }
 
   async activateAccount(activateAccountDto: ActivateAccountDto) {
     const { token } = activateAccountDto
     const { email, id, activate } = this.jwtService.verify(token)
-    let userDto
 
     const user = await this.userRepository.findOneByIdAndEmail(id, email)
     if (!(user && activate)) {
-      return Result.fail(MESSAGE.INVALID_TOKEN)
+      return Result.fail(INVALID_TOKEN)
     }
 
     if (user.isActive()) {
-      userDto = this.toDtoAdapter.build(user).value()
-      return Result.Ok(MESSAGE.USER_ALREADY_ACTIVATED)
+      return Result.Ok(USER_ALREADY_ACTIVATED)
     }
 
     user.activate()
-    const savedUser = await this.userRepository.save(user)
-    userDto = this.toDtoAdapter.build(savedUser).value()
-    return Result.Ok(MESSAGE.USER_ACTIVATED)
+    await this.userRepository.save(user)
+    return Result.Ok(USER_ACTIVATED)
   }
 }

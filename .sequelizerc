@@ -1,8 +1,0 @@
-const path = require('path')
-
-module.exports = {
-  'migrations-path': path.resolve('build/infra/sequelize', 'migrations'),
-  'seeders-path': path.resolve('build/infra/sequelize', 'seeders'),
-  'models-path': path.resolve('build/infra/sequelize', 'models'),
-  url: process.env.DB_URI
-}

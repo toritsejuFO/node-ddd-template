@@ -1,37 +1,41 @@
-import { Sequelize } from 'sequelize'
-
 import { Config } from '@infra/config'
 import { Logger } from '@shared/logger'
-import sequelize from '@infra/sequelize'
+
+import { PrismaClient, Prisma } from '@prisma/client'
 
 export interface Database {
-  connection: Sequelize
+  get client(): PrismaClient
 
   connect(): void
   disconnect(): void
 }
 
 export default class implements Database {
-  readonly connection: any
+  private readonly prisma: PrismaClient
 
   constructor(
     private readonly config: Config,
     private readonly logger: Logger
   ) {
     if (config.db) {
-      this.connection = sequelize(this.config)
-      this.connection.sync()
+      this.prisma = new PrismaClient({
+        log: [this.config.db.logLevel as Prisma.LogLevel]
+      })
     } else {
       this.logger.error('DB_ERROR, missing config. Exiting.')
       process.exit(1)
     }
   }
 
+  get client() {
+    return this.prisma
+  }
+
   async connect() {
-    this.connection.authenticate()
+    this.prisma.$connect()
   }
 
   async disconnect() {
-    this.connection.close()
+    this.prisma.$disconnect()
   }
 }

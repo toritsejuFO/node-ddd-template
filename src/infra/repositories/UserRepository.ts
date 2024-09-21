@@ -1,40 +1,33 @@
 import { IAdapter } from 'types-ddd'
 
 import DatabaseError from '@shared/errors/DatabaseError'
-import Database from '@infra/database'
+import { Database } from '@infra/database'
 import { Logger } from '@shared/logger'
-import UserRepository, {
-  UserModel
-} from '@/app/repositories/interface/UserRepository.interface'
+import { IUserRepository, IUserModel } from '@/app/repositories/IUserRepository'
 import User from '@domain/entities/user/User'
+import { IPageable } from '@/shared/utils/IPageable'
+import { RepositoryHelper } from '@infra/repositories/RepositoryHelper'
+import { PageRequest } from '@app/dtos/PageRequestDto'
 
-export default class implements UserRepository {
-  private readonly user: any
+export default class UserRepository implements IUserRepository {
+  private readonly repositoryHelper: RepositoryHelper<IUserModel>
 
   constructor(
     private readonly database: Database,
     private readonly logger: Logger,
-    private readonly toDomainAdapter: IAdapter<UserModel, User>,
-    private readonly toPersistenceAdapter: IAdapter<User, UserModel>
+    private readonly toDomainAdapter: IAdapter<IUserModel, User>,
+    private readonly toPersistenceAdapter: IAdapter<User, IUserModel>
   ) {
-    this.user = this.database.connection.models.User
+    this.repositoryHelper = new RepositoryHelper<IUserModel>(
+      this.database.client
+    )
   }
 
-  async findAll(): Promise<User[]> {
+  private async findOneByParams(params: any): Promise<User | null> {
     try {
-      const users = await this.user.findAll()
-      return users.map((user: UserModel) =>
-        this.toDomainAdapter.build(user).value()
-      )
-    } catch (error) {
-      this.logger.error(error)
-      throw new DatabaseError('Error fetching users from DB')
-    }
-  }
-
-  private async findOneByParams(params: object): Promise<User | null> {
-    try {
-      const user: UserModel = await this.user.findOne({ where: params })
+      const user = (await this.database.client.users.findUnique({
+        where: params
+      })) as IUserModel | null
       if (!user) return null
       return this.toDomainAdapter.build(user).value()
     } catch (error) {
@@ -45,17 +38,9 @@ export default class implements UserRepository {
     }
   }
 
-  async findOneById(userId: string): Promise<User | null> {
-    return this.findOneByParams({ userId })
-  }
-
-  async findOneByEmail(email: string): Promise<User | null> {
-    return this.findOneByParams({ email })
-  }
-
   private async existsByParams(params: object): Promise<boolean> {
     try {
-      const count = await this.user.count({ where: params })
+      const count = await this.database.client.users.count({ where: params })
       return count === 1
     } catch (error) {
       this.logger.error(error)
@@ -63,26 +48,75 @@ export default class implements UserRepository {
     }
   }
 
-  async existsById(userId: string): Promise<boolean> {
+  private async find(
+    where: any,
+    pageRequest: PageRequest
+  ): Promise<IPageable<User>> {
+    try {
+      const pageable: IPageable<IUserModel> =
+        await this.repositoryHelper.paginate(
+          this.database.client.users,
+          {},
+          pageRequest
+        )
+
+      const data: IPageable<User> = Object.assign(pageable, {
+        data: pageable.data.map((user) =>
+          this.toDomainAdapter.build(user).value()
+        )
+      })
+
+      return data
+    } catch (error) {
+      this.logger.error(error)
+      throw new DatabaseError('Error fetching users from DB')
+    }
+  }
+
+  public async findAll(pageRequest: PageRequest): Promise<IPageable<User>> {
+    return this.find({}, pageRequest)
+  }
+
+  public async findAllBy(
+    where: any,
+    pageRequest: PageRequest
+  ): Promise<IPageable<User>> {
+    return this.find(where, pageRequest)
+  }
+
+  public async findOneById(userId: string): Promise<User | null> {
+    return this.findOneByParams({ userId })
+  }
+
+  public async findOneByEmail(email: string): Promise<User | null> {
+    return this.findOneByParams({ email })
+  }
+
+  public async existsById(userId: string): Promise<boolean> {
     return this.existsByParams({ userId })
   }
 
-  async existsByEmail(email: string): Promise<boolean> {
+  public async existsByEmail(email: string): Promise<boolean> {
     return this.existsByParams({ email })
   }
 
-  async save(user: User): Promise<User> {
+  public async save(user: User): Promise<User> {
     try {
-      const userModel: UserModel = this.toPersistenceAdapter.build(user).value()
+      const userModel = <IUserModel>(
+        this.toPersistenceAdapter.build(user).value()
+      )
       let savedUser
 
       if (await this.existsById(userModel.userId)) {
-        savedUser = await this.user.update(userModel, {
-          where: { userId: userModel.userId }
+        savedUser = await this.database.client.users.update({
+          where: { userId: userModel.userId },
+          data: userModel
         })
         return user
       } else {
-        savedUser = await this.user.create(userModel)
+        savedUser = await this.database.client.users.create({
+          data: userModel as any
+        })
       }
 
       return this.toDomainAdapter.build(savedUser).value()
@@ -92,7 +126,7 @@ export default class implements UserRepository {
     }
   }
 
-  async findOneByIdAndEmail(
+  public async findOneByIdAndEmail(
     userId: string,
     email: string
   ): Promise<User | null> {

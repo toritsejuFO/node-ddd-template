@@ -44,7 +44,6 @@ container
     jwtService: asClass(JWT).singleton(),
     eventPublisher: asClass(EventPublisher).singleton(),
 
-    // Presentation
     router: asClass(Router).singleton()
   })
   .loadModules(

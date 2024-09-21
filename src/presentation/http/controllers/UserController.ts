@@ -9,6 +9,7 @@ import {
   ActivateAccountSchema
 } from '@presentation/http/schema/UserSchema'
 import { Logger } from '@/shared/logger'
+import { PageRequestSchema } from '@presentation/http/schema/PageRequest'
 
 const { CREATED, OK, UNAUTHORIZED, BAD_REQUEST, NOT_FOUND } = StatusCodes
 
@@ -30,12 +31,13 @@ export default class UserController extends BaseController {
   }
 
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
+    const querySchema = PageRequestSchema.parse(req.query)
     try {
-      const result = await this.userManager.getAllUsers()
+      const result = await this.userManager.getAllUsers(querySchema)
       return res.status(OK).json(this.success(result))
     } catch (error) {
       console.log('ERROR', error)
-      return this.handleError(error, res, next, this.logger)
+      return this.handleError(error, res, next)
     }
   }
 
@@ -50,7 +52,7 @@ export default class UserController extends BaseController {
 
       return res.status(CREATED).json(this.success(result))
     } catch (error) {
-      return this.handleError(error, res, next, this.logger)
+      return this.handleError(error, res, next)
     }
   }
 
@@ -65,7 +67,7 @@ export default class UserController extends BaseController {
 
       return res.status(OK).send(this.success(result))
     } catch (error) {
-      return this.handleError(error, res, next, this.logger)
+      return this.handleError(error, res, next)
     }
   }
 
@@ -85,7 +87,7 @@ export default class UserController extends BaseController {
 
       return res.status(OK).json(this.success(result))
     } catch (error) {
-      return this.handleError(error, res, next, this.logger)
+      return this.handleError(error, res, next)
     }
   }
 
@@ -100,7 +102,7 @@ export default class UserController extends BaseController {
 
       return res.status(OK).json(this.success(result))
     } catch (error) {
-      return this.handleError(error, res, next, this.logger)
+      return this.handleError(error, res, next)
     }
   }
 }
