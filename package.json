@@ -12,7 +12,7 @@
     "start": "tsx --env-file=.env dist/index.js",
     "serve": "npm run build && npm run start",
     "docker:build": "docker build -t node-ddd-template .",
-    "docker:run": "docker run -it --rm --name node-ddd-template --env-file=.env.docker -p 4300:4300 node-ddd-template",
+    "docker:run": "docker run -it --rm --name node-ddd-template --env-file=.env -p 4300:4300 node-ddd-template",
     "docker:start": "npm run docker:build && npm run docker:run",
     "prisma:format": "npx prisma format",
     "prisma:migrate:dev": "npx prisma migrate dev",
