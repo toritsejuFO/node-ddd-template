@@ -10,11 +10,10 @@ import {
 
 import { App } from '@/App'
 
-// EventHandlers
+// App
 import { NewUserCreatedHandler } from '@app/eventhandlers/NewUserCreatedHandler'
 
 // Infra
-import { config } from '@shared/config'
 import { Database } from '@infra/database'
 import { logger } from '@shared/logger'
 import { HashService } from '@/infra/hashing'
@@ -24,6 +23,9 @@ import { EventPublisher } from '@/infra/eventpublisher/EventPublisher'
 
 // Presentation
 import { Router } from '@presentation/http/Router'
+
+// Shared
+import { config } from '@shared/config'
 
 const container = createContainer({ injectionMode: InjectionMode.CLASSIC })
 
