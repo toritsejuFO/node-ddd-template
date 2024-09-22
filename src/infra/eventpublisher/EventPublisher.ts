@@ -1,15 +1,15 @@
 import { EventEmitter } from 'events'
 
-import EventPublisher from '@/domain/events/interface/EventPublisher.interface'
-import Event from '@domain/events/interface/Event.interface'
-import EventHandler from '@/app/eventhandlers/interface/EventHandler.interface'
+import { IEventPublisher } from '@/domain/events/IEventPublisher'
+import { IEvent } from '@domain/events/IEvent'
+import { IEventHandler } from '@/app/eventhandlers/IEventHandler'
 
-export default class extends EventEmitter implements EventPublisher {
+export class EventPublisher extends EventEmitter implements IEventPublisher {
   constructor() {
     super()
   }
 
-  publishEvent(event: Event) {
+  publishEvent(event: IEvent) {
     if (event.getPayload()) {
       return this.emit(event.getName(), event)
     } else {
@@ -17,7 +17,7 @@ export default class extends EventEmitter implements EventPublisher {
     }
   }
 
-  registerHandler(eventHandler: EventHandler) {
+  registerHandler(eventHandler: IEventHandler) {
     const registered = this.listeners(eventHandler.getEventName()).find(
       (h) => String(h.name) === String(eventHandler.handle.name)
     )

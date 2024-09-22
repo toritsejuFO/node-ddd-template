@@ -1,6 +1,6 @@
 export default (data: any): string => {
   const activationLink = `http://localhost:4300/user/activate?token=${
-    data.activationToken || 'dummytoken'
+    data.activationToken
   }`
 
   return `

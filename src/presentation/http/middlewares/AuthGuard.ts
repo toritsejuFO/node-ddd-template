@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
 
 import { IUserRepository } from '@/app/repositories/IUserRepository'
-import JwtService from '@/app/services/interface/JwtService.interface'
+import { IJwtService } from '@/app/services/IJwtService'
 
-export default (jwtService: JwtService, userRepository: IUserRepository) =>
+export default (jwtService: IJwtService, userRepository: IUserRepository) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const token = req.get('X-Auth-Token')
     let email, id, user

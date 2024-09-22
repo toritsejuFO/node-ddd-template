@@ -1,6 +1,6 @@
 export const NEW_USER_CREATED = 'NEW_USER_CREATED'
 
-export default interface Event {
+export interface IEvent {
   getName(): string
   getPayload(): any
 }
