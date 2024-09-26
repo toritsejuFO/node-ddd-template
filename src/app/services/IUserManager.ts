@@ -6,11 +6,11 @@ import {
   LoginDto,
   ActivateAccountDto
 } from '@app/dtos/UserDto'
-import User from '@/domain/entities/user/User'
+import { User } from '@/domain/entities/user/User'
 import { IPageable } from '@/shared/utils/IPageable'
 import { PageRequest } from '@app/dtos/PageRequestDto'
 
-export default interface UserManager {
+export interface IUserManager {
   getAllUsers(pageRequest: PageRequest): Promise<Result<IPageable<UserDto>>>
   registerUser(userDto: NewUserDto): Promise<Result<UserDto | void>>
   login(loginDto: LoginDto): Promise<Result<{ token: string } | void>>

@@ -1,7 +1,7 @@
 import { describe, it, mock } from 'node:test'
 import { strictEqual, deepEqual } from 'node:assert/strict'
 
-import User from '@domain/entities/user/User'
+import { User } from '@domain/entities/user/User'
 import { newUserDto } from 'tests/fixtures/User'
 
 describe('@domain/entities/user/User', () => {

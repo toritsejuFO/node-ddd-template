@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken'
 
-import { Config } from '@infra/config'
-import JwtService from '@/app/services/interface/JwtService.interface'
+import { Config } from '@shared/config'
+import { IJwtService } from '@/app/services/IJwtService'
 
-export default class implements JwtService {
+export class JwtService implements IJwtService {
   constructor(private readonly config: Config) {}
 
   encode(payload: object, options = {}) {

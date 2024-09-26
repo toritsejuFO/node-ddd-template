@@ -1,9 +1,11 @@
 import { Application } from 'express'
-import { AwilixContainer } from 'awilix'
+import { AwilixContainer, RESOLVER } from 'awilix'
 
 const USER_CONTROLLER = 'userController'
 
-export default class Router {
+export class Router {
+  static [RESOLVER] = {}
+
   constructor(
     private readonly routeLogger: any,
     private readonly errorHandler: any,

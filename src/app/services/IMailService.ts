@@ -1,10 +1,10 @@
-export interface MailParams {
+export type MailParams = {
   to: string
   subject: string
   template: string
   data: any
 }
 
-export default interface MailService {
+export interface IMailService {
   sendMail(mailParams: MailParams): Promise<void>
 }

@@ -1,15 +1,18 @@
 import { IAdapter } from 'types-ddd'
+import { RESOLVER } from 'awilix'
 
-import DatabaseError from '@shared/errors/DatabaseError'
+import { DatabaseError } from '@shared/errors/DatabaseError'
 import { Database } from '@infra/database'
 import { Logger } from '@shared/logger'
 import { IUserRepository, IUserModel } from '@/app/repositories/IUserRepository'
-import User from '@domain/entities/user/User'
+import { User } from '@domain/entities/user/User'
 import { IPageable } from '@/shared/utils/IPageable'
 import { RepositoryHelper } from '@infra/repositories/RepositoryHelper'
 import { PageRequest } from '@app/dtos/PageRequestDto'
 
-export default class UserRepository implements IUserRepository {
+export class UserRepository implements IUserRepository {
+  static [RESOLVER] = {}
+
   private readonly repositoryHelper: RepositoryHelper<IUserModel>
 
   constructor(

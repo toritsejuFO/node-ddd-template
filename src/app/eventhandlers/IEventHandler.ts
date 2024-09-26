@@ -1,6 +1,6 @@
 import Event from '@domain/events/interface/Event.interface'
 
-export default interface EventHandler {
+export interface IEventHandler {
   getEventName(): string
   handle(event: Event): void
 }
