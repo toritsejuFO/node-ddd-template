@@ -4,12 +4,12 @@ import express, { Application } from 'express'
 import { AwilixContainer } from 'awilix'
 
 import { Database } from '@infra/database'
-import { Config } from '@infra/config'
+import { Config } from '@shared/config'
 import { Logger } from '@shared/logger'
-import EventHandler from '@/app/eventhandlers/interface/EventHandler.interface'
-import EventPublisher from '@/domain/events/interface/EventPublisher.interface'
+import { IEventHandler } from '@/app/eventhandlers/IEventHandler'
+import { IEventPublisher } from '@/domain/events/IEventPublisher'
 
-export interface App {
+export interface IApp {
   app: Application
 
   start(container: AwilixContainer): Promise<void>
@@ -17,7 +17,7 @@ export interface App {
   getLogger(): Logger
 }
 
-export default class implements App {
+export class App implements IApp {
   readonly app: Application
   server!: Server
 
@@ -25,8 +25,8 @@ export default class implements App {
     private readonly config: Config,
     private readonly logger: Logger,
     private readonly database: Database,
-    private readonly eventPublisher: EventPublisher,
-    private readonly eventHandlers: EventHandler[]
+    private readonly eventPublisher: IEventPublisher,
+    private readonly eventHandlers: IEventHandler[]
   ) {
     this.app = express()
     this.database.connect()
@@ -40,7 +40,7 @@ export default class implements App {
     container.resolve('router').setupRoutes(this.app, container)
 
     // Register all eventhandlers
-    this.eventHandlers.map((h: EventHandler) =>
+    this.eventHandlers.map((h: IEventHandler) =>
       this.eventPublisher.registerHandler(h)
     )
 

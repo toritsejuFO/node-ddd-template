@@ -1,4 +1,4 @@
-import User from '@domain/entities/user/User'
+import { User } from '@domain/entities/user/User'
 import { IPageable } from '@shared/utils/IPageable'
 import { PageRequest } from '@app/dtos/PageRequestDto'
 

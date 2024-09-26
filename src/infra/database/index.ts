@@ -1,16 +1,16 @@
-import { Config } from '@infra/config'
+import { Config } from '@shared/config'
 import { Logger } from '@shared/logger'
 
 import { PrismaClient, Prisma } from '@prisma/client'
 
-export interface Database {
+export interface IDatabase {
   get client(): PrismaClient
 
   connect(): void
   disconnect(): void
 }
 
-export default class implements Database {
+export class Database implements IDatabase {
   private readonly prisma: PrismaClient
 
   constructor(

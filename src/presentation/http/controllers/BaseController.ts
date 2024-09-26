@@ -18,7 +18,7 @@ type OkResponse = {
   data?: any
 }
 
-export default abstract class BaseController {
+export abstract class BaseController {
   constructor(protected logger: Logger) {}
 
   handleError(error: any, res: Response, next: NextFunction) {

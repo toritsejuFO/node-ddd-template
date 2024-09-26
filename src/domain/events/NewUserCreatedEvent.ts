@@ -1,8 +1,6 @@
-import Event, {
-  NEW_USER_CREATED
-} from '@/domain/events/interface/Event.interface'
+import { IEvent, NEW_USER_CREATED } from '@/domain/events/IEvent'
 
-export default class NewUserCreatedEvent implements Event {
+export class NewUserCreatedEvent implements IEvent {
   private readonly name = NEW_USER_CREATED
 
   constructor(private readonly payload: any) {
