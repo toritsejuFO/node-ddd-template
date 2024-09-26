@@ -1,9 +1,10 @@
-import { Config } from '@/infra/config'
+import { Config } from '@/shared/config'
 import { getLogger } from 'log4js'
 
-export default function logger(config: Config) {
+export function logger(config: Config) {
   const logger = getLogger('APP')
   logger.level = config.app.logLevel ?? 'DEBUG'
   return logger
 }
+
 export type Logger = ReturnType<typeof logger>

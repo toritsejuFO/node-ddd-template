@@ -1,18 +1,19 @@
 import { IAdapter, Result } from 'types-ddd'
+import { RESOLVER } from 'awilix'
 
 import { IUserRepository } from '@/app/repositories/IUserRepository'
-import User from '@domain/entities/user/User'
-import UserManager from '@/app/services/interface/UserManager.interface'
-import NewUserCreatedEvent from '@domain/events/NewUserCreatedEvent'
-import HashService from '@/app/services/interface/HashService.interface'
-import EventPublisher from '@/domain/events/interface/EventPublisher.interface'
+import { User } from '@domain/entities/user/User'
+import { IUserManager } from '@/app/services/IUserManager'
+import { NewUserCreatedEvent } from '@domain/events/NewUserCreatedEvent'
+import { IHashService } from '@/app/services/IHashService'
+import { IEventPublisher } from '@/domain/events/IEventPublisher'
 import {
   NewUserDto,
   UserDto,
   LoginDto,
   ActivateAccountDto
 } from '@app/dtos/UserDto'
-import JwtService from '@/app/services/interface/JwtService.interface'
+import { IJwtService } from '@/app/services/IJwtService'
 import USER_MESSAGE from '@/app/messaging/UserMessage'
 import { Logger } from '@/shared/logger'
 import { PageRequest } from '@app/dtos/PageRequestDto'
@@ -32,13 +33,15 @@ const {
   LOGIN_FAILED
 } = USER_MESSAGE
 
-export default class implements UserManager {
+export class UserManager implements IUserManager {
+  static [RESOLVER] = {}
+
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly eventPublisher: EventPublisher,
-    private readonly hashService: HashService,
+    private readonly eventPublisher: IEventPublisher,
+    private readonly hashService: IHashService,
     private readonly toDtoAdapter: IAdapter<User, UserDto>,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: IJwtService,
     protected readonly logger: Logger
   ) {}
 

@@ -1,9 +1,8 @@
-import HashService from '@/app/services/interface/HashService.interface'
 import { randomBytes, scryptSync } from 'node:crypto'
 
-export default class implements HashService {
-  private readonly SALT = 10
+import { IHashService } from '@/app/services/IHashService'
 
+export class HashService implements IHashService {
   private generateSalt() {
     return randomBytes(16).toString('hex')
   }

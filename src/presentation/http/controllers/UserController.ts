@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
+import { RESOLVER } from 'awilix'
 
-import UserManager from '@/app/services/interface/UserManager.interface'
-import BaseController from '@presentation/http/controllers/BaseController'
+import { IUserManager } from '@/app/services/IUserManager'
+import { BaseController } from '@presentation/http/controllers/BaseController'
 import {
   NewUserSchema,
   LoginSchema,
@@ -13,9 +14,11 @@ import { PageRequestSchema } from '@presentation/http/schema/PageRequest'
 
 const { CREATED, OK, UNAUTHORIZED, BAD_REQUEST, NOT_FOUND } = StatusCodes
 
-export default class UserController extends BaseController {
+export class UserController extends BaseController {
+  static [RESOLVER] = {}
+
   constructor(
-    private readonly userManager: UserManager,
+    private readonly userManager: IUserManager,
     protected readonly logger: Logger
   ) {
     super(logger)

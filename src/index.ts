@@ -1,7 +1,7 @@
 import container from '@/container'
-import { App } from '@/App'
+import { IApp } from '@/App'
 
-const app: App = container.resolve('app')
+const app = <IApp>container.resolve('app')
 
 app
   .start(container)

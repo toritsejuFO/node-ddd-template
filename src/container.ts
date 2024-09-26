@@ -8,22 +8,24 @@ import {
   Lifetime
 } from 'awilix'
 
-import App from '@/App'
+import { App } from '@/App'
 
-// EventHandlers
-import NewUserCreatedHandler from '@app/eventhandlers/NewUserCreatedHandler'
+// App
+import { NewUserCreatedHandler } from '@app/eventhandlers/NewUserCreatedHandler'
 
 // Infra
-import Config from '@infra/config'
-import Database from '@infra/database'
-import Logger from '@shared/logger'
-import HashService from '@/infra/hashing'
-import NodeMailer from '@infra/mail/NodeMailer'
-import JWT from '@infra/jwt'
-import EventPublisher from '@/infra/eventpublisher/EventPublisher'
+import { Database } from '@infra/database'
+import { logger } from '@shared/logger'
+import { HashService } from '@/infra/hashing'
+import { MailService } from '@infra/mail/NodeMailer'
+import { JwtService } from '@infra/jwt'
+import { EventPublisher } from '@/infra/eventpublisher/EventPublisher'
 
 // Presentation
-import Router from '@presentation/http/Router'
+import { Router } from '@presentation/http/Router'
+
+// Shared
+import { config } from '@shared/config'
 
 const container = createContainer({ injectionMode: InjectionMode.CLASSIC })
 
@@ -36,12 +38,12 @@ container
     eventHandlers: asArray([asClass(NewUserCreatedHandler).singleton()]),
 
     // Infra
-    config: asValue(Config),
+    config: asValue(config),
     database: asClass(Database).singleton(),
-    logger: asFunction(Logger).singleton(),
+    logger: asFunction(logger).singleton(),
     hashService: asClass(HashService).singleton(),
-    mailService: asClass(NodeMailer).singleton(),
-    jwtService: asClass(JWT).singleton(),
+    mailService: asClass(MailService).singleton(),
+    jwtService: asClass(JwtService).singleton(),
     eventPublisher: asClass(EventPublisher).singleton(),
 
     router: asClass(Router).singleton()

@@ -12,7 +12,7 @@ export interface UserProps {
   updatedAt?: Date
 }
 
-export default class User extends Entity<UserProps> {
+export class User extends Entity<UserProps> {
   private constructor(userProps: UserProps) {
     super(userProps)
   }

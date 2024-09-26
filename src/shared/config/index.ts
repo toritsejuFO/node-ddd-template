@@ -1,4 +1,4 @@
-const config = {
+export const config = {
   app: {
     env: process.env.NODE_ENV || 'development',
     port: process.env.APP_PORT || '4300',
@@ -23,4 +23,3 @@ const config = {
 }
 
 export type Config = typeof config
-export default config

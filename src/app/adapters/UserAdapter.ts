@@ -1,7 +1,7 @@
 import { RESOLVER } from 'awilix'
 import { IAdapter, ID, Result } from 'types-ddd'
 
-import User from '@domain/entities/user/User'
+import { User } from '@domain/entities/user/User'
 import { IUserModel } from '@/app/repositories/IUserRepository'
 import { UserDto } from '@app/dtos/UserDto'
 
